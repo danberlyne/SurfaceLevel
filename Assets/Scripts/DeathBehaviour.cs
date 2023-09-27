@@ -13,7 +13,9 @@ public class DeathBehaviour : MonoBehaviour
         GameObject[] projectiles = GameObject.FindGameObjectsWithTag("Projectile");
         if (projectiles.Length <= 1)
         {
-            FindObjectOfType<EffectButtons>().EnableEffectButtons();
+            EffectButtons effectButtons = FindObjectOfType<EffectButtons>();
+            effectButtons.EnableEffectButtons();
+            effectButtons.ToggleAllOff();
         }
         FindObjectOfType<GameManager>().CheckForLevelEnd();
     }

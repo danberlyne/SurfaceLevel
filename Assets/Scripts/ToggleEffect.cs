@@ -16,8 +16,6 @@ public class ToggleEffect : MonoBehaviour
     public void ToggleButton()
     {
         isOn = !isOn;
-        Button button = GetComponent<Button>();
-        ColorBlock cb = button.colors;
 
         if (!isOn)
         {
@@ -28,5 +26,11 @@ public class ToggleEffect : MonoBehaviour
     public bool GetIsOn()
     {
         return isOn;
+    }
+
+    public void TurnOff()
+    {
+        isOn = false;
+        EventSystem.current.GetComponent<EventSystem>().SetSelectedGameObject(null);
     }
 }

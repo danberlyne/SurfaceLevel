@@ -2,15 +2,17 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    ProjectileBehaviour projectileBehaviour;
+    GunController gunController;
     int remainingFragments;
     [SerializeField] GameObject overlayCanvas;
+    [SerializeField] GameObject pauseMenuCanvas;
     [SerializeField] float startDelay = 4.0f;
     [SerializeField] float loadDelay = 0.5f;
     [SerializeField] GameObject gameOverGraphic;
@@ -20,7 +22,7 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        projectileBehaviour = FindObjectOfType<ProjectileBehaviour>();
+        gunController = FindObjectOfType<GunController>();
         remainingFragments = GameObject.FindGameObjectsWithTag("Fragment").Length;
         StartCoroutine(StartUp());
     }
@@ -115,6 +117,9 @@ public class GameManager : MonoBehaviour
         // Go to Success screen, calculate bonus, then prompt to go to next level or save and quit. If we reached the last level, go to Congratulations screen and show high scores.
         FindObjectOfType<GameSession>().UpdateScoreAtLevelStart();
         FindObjectOfType<SliderController>().ResetEnergy();
+        EffectButtons effectButtons = FindObjectOfType<EffectButtons>();
+        effectButtons.EnableEffectButtons();
+        effectButtons.ToggleAllOff();
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         int nextSceneIndex = currentSceneIndex + 1;
         Time.timeScale = 1.0f;
@@ -125,6 +130,9 @@ public class GameManager : MonoBehaviour
     {
         FindObjectOfType<SliderController>().ResetEnergy();
         FindObjectOfType<ScoreKeeper>().RollbackScore();
+        EffectButtons effectButtons = FindObjectOfType<EffectButtons>();
+        effectButtons.EnableEffectButtons();
+        effectButtons.ToggleAllOff();
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex);
     }
@@ -134,6 +142,32 @@ public class GameManager : MonoBehaviour
         GameSession gameSession = FindObjectOfType<GameSession>();
         Destroy(gameSession.gameObject);
         SceneManager.LoadScene(0);
+    }
+
+    void OnPause(InputValue value)
+    {
+        if (value.isPressed && !pauseMenuCanvas.activeInHierarchy)
+        {
+            Pause();
+        }
+        else if (value.isPressed && pauseMenuCanvas.activeInHierarchy)
+        {
+            Unpause();
+        }
+    }
+
+    public void Pause()
+    {
+        pauseMenuCanvas.SetActive(true);
+        gunController.DisableControls();
+        Time.timeScale = 0f;
+    }
+
+    public void Unpause()
+    {
+        pauseMenuCanvas.SetActive(false);
+        gunController.EnableControls();
+        Time.timeScale = 1f;
     }
 
     public void UpdateRemainingFragments()

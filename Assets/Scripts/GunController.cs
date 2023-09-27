@@ -123,6 +123,11 @@ public class GunController : MonoBehaviour
 
     public void DisableControls()
     {
-        gameObject.SetActive(false);
+        disabled = true;
+    }
+
+    public void EnableControls()
+    {
+        disabled = false;
     }
 }

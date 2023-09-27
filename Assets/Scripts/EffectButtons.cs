@@ -97,4 +97,12 @@ public class EffectButtons : MonoBehaviour
         }
         GreyOut();
     }
+
+    public void ToggleAllOff()
+    {
+        for (int i = 0; i < effectButtons.Length; i++)
+        {
+            effectButtons[i].GetComponent<ToggleEffect>().TurnOff();
+        }
+    }
 }
