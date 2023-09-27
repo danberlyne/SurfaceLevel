@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -9,6 +10,8 @@ public class GameManager : MonoBehaviour
 {
     ProjectileBehaviour projectileBehaviour;
     int remainingFragments;
+    [SerializeField] GameObject overlayCanvas;
+    [SerializeField] float startDelay = 4.0f;
     [SerializeField] float loadDelay = 0.5f;
     [SerializeField] GameObject gameOverGraphic;
     [SerializeField] GameObject gameOverButtons;
@@ -19,6 +22,29 @@ public class GameManager : MonoBehaviour
     {
         projectileBehaviour = FindObjectOfType<ProjectileBehaviour>();
         remainingFragments = GameObject.FindGameObjectsWithTag("Fragment").Length;
+        StartCoroutine(StartUp());
+    }
+
+    IEnumerator StartUp()
+    {
+        float brightness = 0f;
+        Light2D[] lightSources = FindObjectsOfType<Light2D>();
+
+        while (brightness < 1.0f)
+        {
+            foreach (Light2D lightSource in lightSources)
+            {
+                lightSource.intensity = brightness;
+            }
+            brightness += Time.deltaTime / startDelay;
+            yield return null;
+        }
+
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if (currentSceneIndex == 1)
+        {
+            overlayCanvas.SetActive(true);
+        }
     }
 
     void Update()
@@ -101,6 +127,13 @@ public class GameManager : MonoBehaviour
         FindObjectOfType<ScoreKeeper>().RollbackScore();
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex);
+    }
+
+    public void QuitToMainMenu()
+    {
+        GameSession gameSession = FindObjectOfType<GameSession>();
+        Destroy(gameSession.gameObject);
+        SceneManager.LoadScene(0);
     }
 
     public void UpdateRemainingFragments()

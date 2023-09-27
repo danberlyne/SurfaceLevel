@@ -75,15 +75,15 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4282384448
-  m_fontColor: {r: 0.2509804, g: 0, b: 0.2509804, a: 1}
-  m_enableVertexGradient: 0
+    rgba: 4278255615
+  m_fontColor: {r: 1, g: 1, b: 0, a: 1}
+  m_enableVertexGradient: 1
   m_colorMode: 3
   m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topLeft: {r: 1, g: 0, b: 1, a: 1}
     topRight: {r: 1, g: 1, b: 1, a: 1}
-    bottomLeft: {r: 1, g: 1, b: 1, a: 1}
-    bottomRight: {r: 1, g: 1, b: 1, a: 1}
+    bottomLeft: {r: 1, g: 0, b: 1, a: 1}
+    bottomRight: {r: 1, g: 0, b: 1, a: 1}
   m_fontColorGradientPreset: {fileID: 0}
   m_spriteAsset: {fileID: 0}
   m_tintAllSprites: 0
@@ -235,9 +235,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0.2509804, g: 0, b: 0.2509804, a: 1}
-    m_HighlightedColor: {r: 0.3137255, g: 0, b: 0.3137255, a: 1}
-    m_PressedColor: {r: 0.3764706, g: 0, b: 0.3764706, a: 1}
-    m_SelectedColor: {r: 0.3764706, g: 0, b: 0.3764706, a: 1}
+    m_HighlightedColor: {r: 0.42352942, g: 0, b: 0.42352942, a: 1}
+    m_PressedColor: {r: 0.5019608, g: 0, b: 0.5019608, a: 1}
+    m_SelectedColor: {r: 0.5019608, g: 0, b: 0.5019608, a: 1}
     m_DisabledColor: {r: 0.3764706, g: 0.3764706, b: 0.3764706, a: 0.2509804}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -282,7 +282,7 @@ GameObject:
   - component: {fileID: 6985961299833222792}
   - component: {fileID: 2164309452144772894}
   m_Layer: 5
-  m_Name: SaveQuitButton
+  m_Name: QuitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -369,9 +369,9 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 0.2509804, g: 0, b: 0.2509804, a: 1}
-    m_HighlightedColor: {r: 0.3137255, g: 0, b: 0.3137255, a: 1}
-    m_PressedColor: {r: 0.3764706, g: 0, b: 0.3764706, a: 1}
-    m_SelectedColor: {r: 0.3764706, g: 0, b: 0.3764706, a: 1}
+    m_HighlightedColor: {r: 0.42352942, g: 0, b: 0.42352942, a: 1}
+    m_PressedColor: {r: 0.5019608, g: 0, b: 0.5019608, a: 1}
+    m_SelectedColor: {r: 0.5019608, g: 0, b: 0.5019608, a: 1}
     m_DisabledColor: {r: 0.3764706, g: 0.3764706, b: 0.3764706, a: 0.2509804}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -390,7 +390,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 6985961299833222792}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: QuitToMainMenu
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &3736961440348342609
 GameObject:
   m_ObjectHideFlags: 0
@@ -495,7 +507,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Save And Quit
+  m_text: Quit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 07971439baaefd44581cdc3083eccafd, type: 2}
   m_sharedMaterial: {fileID: 4380359170000431871, guid: 07971439baaefd44581cdc3083eccafd, type: 2}
@@ -504,12 +516,12 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4280287264
-  m_fontColor: {r: 0.1254902, g: 0, b: 0.1254902, a: 1}
-  m_enableVertexGradient: 0
+    rgba: 4278255615
+  m_fontColor: {r: 1, g: 1, b: 0, a: 1}
+  m_enableVertexGradient: 1
   m_colorMode: 3
   m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topLeft: {r: 1, g: 0, b: 1, a: 1}
     topRight: {r: 1, g: 1, b: 1, a: 1}
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}
@@ -780,12 +792,12 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 4280287264
-  m_fontColor: {r: 0.1254902, g: 0, b: 0.1254902, a: 1}
-  m_enableVertexGradient: 0
+    rgba: 4278255615
+  m_fontColor: {r: 1, g: 1, b: 0, a: 1}
+  m_enableVertexGradient: 1
   m_colorMode: 3
   m_fontColorGradient:
-    topLeft: {r: 1, g: 1, b: 1, a: 1}
+    topLeft: {r: 1, g: 0, b: 1, a: 1}
     topRight: {r: 1, g: 1, b: 1, a: 1}
     bottomLeft: {r: 1, g: 1, b: 1, a: 1}
     bottomRight: {r: 1, g: 1, b: 1, a: 1}

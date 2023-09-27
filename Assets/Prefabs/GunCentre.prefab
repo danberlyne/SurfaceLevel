@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3ab996ac63608f418f3677978ca05e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startDelay: 4
   turnSensitivity: 100
   angleRestriction: 0.1
   projectile: {fileID: 6365319505348386193, guid: 47726c397d93a1240b28c0e896416a45, type: 3}
@@ -228,7 +229,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0
   m_LightVolumeIntensity: 0.5
   m_LightVolumeIntensityEnabled: 1
   m_ApplyToSortingLayers: 00000000d92207ab996053b7
@@ -310,7 +311,7 @@ MonoBehaviour:
   m_BlendStyleIndex: 0
   m_FalloffIntensity: 0.5
   m_Color: {r: 0.2264151, g: 0.2264151, b: 0.2264151, a: 1}
-  m_Intensity: 1
+  m_Intensity: 0
   m_LightVolumeIntensity: 0.2
   m_LightVolumeIntensityEnabled: 1
   m_ApplyToSortingLayers: 00000000d92207ab996053b7

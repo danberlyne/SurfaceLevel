@@ -14,6 +14,8 @@ where (v1, v2, v3) is the rotation axis as a vector and theta is the rotation an
 
 public class GunController : MonoBehaviour
 {
+    [SerializeField] float startDelay = 4.0f;
+    bool disabled = false;
     Vector2 turnInput;
     [SerializeField] float turnSensitivity = -200;
     // Quaternion w-value for a right angle. Note, the w-value does not encode the direction of rotation, but the x, y, z values do.
@@ -29,16 +31,35 @@ public class GunController : MonoBehaviour
     [SerializeField] int energyCost = 10;
     DeathBehaviour death;
 
-    void Start()
+    void Awake()
     {
         death = FindObjectOfType<DeathBehaviour>();
     }
 
+    void Start()
+    {
+        StartCoroutine(StartUp());
+    }
+
+    IEnumerator StartUp()
+    {
+        disabled = true;
+        yield return new WaitForSeconds(startDelay);
+        disabled = false;
+    }
+
     void Update()
     {
-        float turnAmount = turnInput.x * turnSensitivity * Time.deltaTime;
-        TurnTurret(turnAmount);
-        UpdateTurnSFX(turnAmount);
+        if (disabled)
+        {
+            return;
+        }
+        else
+        {
+            float turnAmount = turnInput.x * turnSensitivity * Time.deltaTime;
+            TurnTurret(turnAmount);
+            UpdateTurnSFX(turnAmount);
+        }
     }
 
     void OnTurn(InputValue value)
@@ -51,7 +72,7 @@ public class GunController : MonoBehaviour
         sliderController = FindObjectOfType<SliderController>();
         CheckEnergy();
 
-        if (!hasSufficientEnergy || !death.GetIsDead())
+        if (!hasSufficientEnergy || !death.GetIsDead() || disabled)
         {
             return;
         }
