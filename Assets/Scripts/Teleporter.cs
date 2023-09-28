@@ -33,9 +33,16 @@ public class Teleporter : MonoBehaviour
     }
     void OnTriggerEnter2D(Collider2D projectile)
     {
-        Vector3 pointOfContactRelBoundary = projectile.gameObject.transform.position - boundaryAnchor;
-        projectile.gameObject.transform.position = otherTeleporter.GetBoundaryAnchor() + pointOfContactRelBoundary;
-        projectile.gameObject.transform.rotation = transform.rotation; // Do we need localRotation instead? Or perhaps velocity of the rigidbody needs to be changed?
+        Collider2D boundaryCollider = GetComponent<Collider2D>();
+        Vector3 projectilePosition = projectile.gameObject.transform.position;
+        Vector2 projectilePosition2D = projectile.gameObject.transform.position;
+        Vector2 collisionPoint = boundaryCollider.ClosestPoint(projectilePosition);
+        Vector3 pointOfContactRelBoundary = new Vector3 (collisionPoint.x, collisionPoint.y, projectilePosition.z) - boundaryAnchor;
+        if (Vector2.Distance(collisionPoint, projectilePosition2D + projectile.attachedRigidbody.velocity) < Vector2.Distance(collisionPoint, projectilePosition2D - projectile.attachedRigidbody.velocity))
+        {
+            projectile.gameObject.transform.position = otherTeleporter.GetBoundaryAnchor() + pointOfContactRelBoundary;
+            // projectile.gameObject.transform.rotation = transform.rotation; // Do we need localRotation instead? Or perhaps velocity of the rigidbody needs to be changed?
+        }
     }
 
     public Vector3 GetBoundaryAnchor()
