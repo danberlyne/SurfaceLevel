@@ -19,7 +19,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject gameOverButtons;
     [SerializeField] float gameOverFadeDuration = 3.0f;
     [SerializeField] float redFadeAmount = 0.5f;
-    [SerializeField] float slowTime = 1f;
+    [SerializeField] bool slowTime = false;
+    [SerializeField] float slowMultiplier = 0.1f;
 
     void Start()
     {
@@ -52,7 +53,11 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        Time.timeScale = slowTime;
+        if (slowTime)
+        {
+            Time.timeScale *= slowMultiplier;
+            slowTime = false;
+        }
 
         if (remainingFragments == 0)
         {
