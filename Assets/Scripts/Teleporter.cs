@@ -55,8 +55,9 @@ public class Teleporter : MonoBehaviour
         Vector2 pointOfContactRelBoundary = new Vector2 (collisionPoint.x, collisionPoint.y) - boundaryAnchor;
         if (Vector2.Angle(normalVector, projectile.attachedRigidbody.velocity) > 90)
         {
-            projectile.gameObject.transform.position = otherTeleporter.GetBoundaryAnchor() + pointOfContactRelBoundary + otherTeleporter.GetNormalVector() * teleportationOffset;
-            projectile.attachedRigidbody.velocity = Rotate(projectile.attachedRigidbody.velocity, Vector2.Angle(-normalVector, otherTeleporter.GetNormalVector()));
+            Vector2 newContactRelBoundary = Rotate(pointOfContactRelBoundary, Vector2.SignedAngle(-normalVector, otherTeleporter.GetNormalVector()));
+            projectile.gameObject.transform.position = otherTeleporter.GetBoundaryAnchor() + newContactRelBoundary + otherTeleporter.GetNormalVector() * teleportationOffset;
+            projectile.attachedRigidbody.velocity = Rotate(projectile.attachedRigidbody.velocity, Vector2.SignedAngle(-normalVector, otherTeleporter.GetNormalVector()));
         }
     }
 

@@ -9,13 +9,13 @@ public class DeathBehaviour : MonoBehaviour
     void OnTriggerEnter2D(Collider2D projectile)
     {
         Destroy(projectile.gameObject);
-        KillProjectile();
         GameObject[] projectiles = GameObject.FindGameObjectsWithTag("Projectile");
         if (projectiles.Length <= 1)
         {
             EffectButtons effectButtons = FindObjectOfType<EffectButtons>();
             effectButtons.EnableEffectButtons();
             effectButtons.ToggleAllOff();
+            KillProjectile();
         }
         FindObjectOfType<GameManager>().CheckForLevelEnd();
     }

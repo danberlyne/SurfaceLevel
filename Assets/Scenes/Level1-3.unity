@@ -1148,6 +1148,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 816398708}
     m_Modifications:
+    - target: {fileID: 1112785175047028027, guid: 3bc67a5c446aca14595102e8f78c375a, type: 3}
+      propertyPath: teleportationOffset
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 2262154076323415658, guid: 3bc67a5c446aca14595102e8f78c375a, type: 3}
       propertyPath: m_LocalBounds.m_Center.x
       value: 0.004349977
@@ -1670,6 +1674,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 816398708}
     m_Modifications:
+    - target: {fileID: 1112785175047028027, guid: 3bc67a5c446aca14595102e8f78c375a, type: 3}
+      propertyPath: teleportationOffset
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 2262154076323415658, guid: 3bc67a5c446aca14595102e8f78c375a, type: 3}
       propertyPath: m_LocalBounds.m_Center.x
       value: -0.00034999847
@@ -2790,6 +2798,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 816398708}
     m_Modifications:
+    - target: {fileID: 1112785175047028027, guid: 3bc67a5c446aca14595102e8f78c375a, type: 3}
+      propertyPath: teleportationOffset
+      value: 0.1
+      objectReference: {fileID: 0}
     - target: {fileID: 2262154076323415658, guid: 3bc67a5c446aca14595102e8f78c375a, type: 3}
       propertyPath: m_LocalBounds.m_Center.x
       value: 0.0024000108

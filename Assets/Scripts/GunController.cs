@@ -30,6 +30,8 @@ public class GunController : MonoBehaviour
     [SerializeField] Transform projectileSpawn;
     [SerializeField] int energyCost = 10;
     DeathBehaviour death;
+    [SerializeField] AudioClip selfDestruction;
+    GameObject[] activeProjectiles;
 
     void Awake()
     {
@@ -86,6 +88,24 @@ public class GunController : MonoBehaviour
         }
     }
 
+    void OnKill(InputValue value)
+    {
+        if (death.GetIsDead() || disabled)
+        {
+            return;
+        }
+
+        if (value.isPressed)
+        {
+            SelfDestruct();
+            EffectButtons effectButtons = FindObjectOfType<EffectButtons>();
+            effectButtons.EnableEffectButtons();
+            effectButtons.ToggleAllOff();
+            death.KillProjectile();
+            FindObjectOfType<GameManager>().CheckForLevelEnd();
+        }
+    }
+
     void TurnTurret(float turnAmount)
     {
         // 'true' if turnAmount is decreasing the absolute value of the current angle of rotation.
@@ -129,5 +149,18 @@ public class GunController : MonoBehaviour
     public void EnableControls()
     {
         disabled = false;
+    }
+
+    void SelfDestruct()
+    {
+        activeProjectiles = GameObject.FindGameObjectsWithTag("Projectile");
+        foreach (GameObject proj in activeProjectiles)
+        {
+            ParticleSystem destructionEffect = GetComponentInChildren<ParticleSystem>();
+            destructionEffect.transform.position = proj.transform.position;
+            destructionEffect.Play();
+            GetComponent<AudioSource>().PlayOneShot(selfDestruction);
+            Destroy(proj);
+        }
     }
 }
