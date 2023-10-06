@@ -125,6 +125,7 @@ public class GameManager : MonoBehaviour
         // Go to Success screen, calculate bonus, then prompt to go to next level or save and quit. If we reached the last level, go to Congratulations screen and show high scores.
         FindObjectOfType<GameSession>().UpdateScoreAtLevelStart();
         FindObjectOfType<SliderController>().ResetEnergy();
+        FindObjectOfType<ScoreKeeper>().UpdateLevel();
         EffectButtons effectButtons = FindObjectOfType<EffectButtons>();
         effectButtons.EnableEffectButtons();
         effectButtons.ToggleAllOff();

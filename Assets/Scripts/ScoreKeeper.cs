@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.SceneManagement;
 
 public class ScoreKeeper : MonoBehaviour
 {
     [SerializeField] GameObject scoreAmount;
     int score;
+    [SerializeField] GameObject levelHeader;
+    int currentStage = 1;
 
     public void UpdateScore()
     {
@@ -16,6 +18,18 @@ public class ScoreKeeper : MonoBehaviour
         score += 1 << destroyedThisShot;
         TextMeshProUGUI scoreText = scoreAmount.GetComponent<TextMeshProUGUI>();
         scoreText.text = score.ToString();
+    }
+
+    public void UpdateLevel()
+    {
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        TextMeshProUGUI levelText = levelHeader.GetComponent<TextMeshProUGUI>();
+        levelText.text = $"Level {currentStage}-{currentSceneIndex+1}";
+    }
+
+    public void UpdateStage()
+    {
+        currentStage += 1;
     }
 
     public int GetScore()
