@@ -3,34 +3,51 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using static UnityEngine.Rendering.DebugUI;
+using UnityEngine.EventSystems;
 
 public class ButtonRemapper : MonoBehaviour
 {
-    [SerializeField] GameObject keyBinding;
+    [SerializeField] InputActionReference inputAction;
+    // [SerializeField] PlayerInput playerInput;
+    [SerializeField] GameObject keyBindingText;
+    [SerializeField] GameObject waitingText;
     [SerializeField] int bindingNumber;
-    [SerializeField] InputActionAsset playerInput;
-    [SerializeField] string actionName;
+
+    InputActionRebindingExtensions.RebindingOperation rebindingOperation;
 
     public void StartRebinding()
     {
-        InputAction actionToRebind = playerInput[actionName];
-        actionToRebind.Disable();
-        var rebindOperation = actionToRebind.PerformInteractiveRebinding(bindingNumber)
-                    // To avoid accidental input from mouse motion
-                    .WithControlsExcluding("Mouse")
-                    .OnMatchWaitForAnother(0.2f)
-                    .Start().OnComplete(op =>
-                    {
-                        UpdateBindingText();
-                        actionToRebind.Enable();
-                    });
+        // Deselects the currently selected UI button to prevent the rebinding operation from being repeatedly triggered.
+        EventSystem.current.SetSelectedGameObject(null);
+
+        inputAction.action.Disable();
+
+        keyBindingText.SetActive(false);
+        waitingText.SetActive(true);
+
+        rebindingOperation = inputAction.action.PerformInteractiveRebinding(bindingNumber)
+            .WithControlsExcluding("Mouse")
+            .OnMatchWaitForAnother(0.1f)
+            .OnComplete(operation => OnRebindComplete())
+            .Start();
+    }
+
+    void OnRebindComplete()
+    {
+        rebindingOperation.Dispose();
+
+        UpdateBindingText();
+
+        waitingText.SetActive(false);
+        keyBindingText.SetActive(true);
+
+        inputAction.action.Enable();
     }
 
     void UpdateBindingText()
     {
-        TextMeshProUGUI bindingText = keyBinding.GetComponent<TextMeshProUGUI>();
-        string bindingPath = playerInput[actionName].bindings[bindingNumber].path;
+        TextMeshProUGUI bindingText = keyBindingText.GetComponent<TextMeshProUGUI>();
+        string bindingPath = inputAction.action.bindings[bindingNumber].effectivePath;
 
         if (bindingPath == null || bindingPath == "")
         {
@@ -38,7 +55,7 @@ public class ButtonRemapper : MonoBehaviour
         }
         else
         {
-            bindingPath = bindingPath.Substring(bindingPath.IndexOf("/") + 1);
+            bindingPath = InputControlPath.ToHumanReadableString(bindingPath, InputControlPath.HumanReadableStringOptions.OmitDevice);
         }
 
         bindingText.text = bindingPath;

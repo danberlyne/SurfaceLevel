@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
@@ -10,6 +11,8 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] float saveDelay = 0.5f;
     [SerializeField] Slider[] settingsSliders;
     [SerializeField] float defaultSliderValue = 50f;
+    [SerializeField] GameObject[] bindings;
+    [SerializeField] string[] defaultPaths;
     [Header("Audio Settings")]
     [SerializeField] GameObject backgroundVolume;
     float backgroundVolumeValue;
@@ -19,6 +22,7 @@ public class SettingsManager : MonoBehaviour
     [SerializeField] GameObject turnSensitivity;
     float turnSensitivityValue;
     [Header("Key Bindings")]
+    [SerializeField] InputActionAsset inputActionAsset;
     [SerializeField] GameObject fire1;
     [SerializeField] GameObject fire2;
     [SerializeField] GameObject kill1;
@@ -32,6 +36,7 @@ public class SettingsManager : MonoBehaviour
         LoadSettings();
         UpdateBackgroundVolume();
         UpdateSFXVolume();
+        UpdateBindings();
     }
 
     void Start()
@@ -63,7 +68,18 @@ public class SettingsManager : MonoBehaviour
         PlayerPrefs.SetFloat("Background Volume", backgroundVolume.GetComponent<Slider>().value);
         PlayerPrefs.SetFloat("SFX Volume", sfxVolume.GetComponent<Slider>().value);
         PlayerPrefs.SetFloat("Turn Sensitivity", turnSensitivity.GetComponent<Slider>().value);
+        PlayerPrefs.SetString("Fire 1", GetPath("Fire", 0));
+        PlayerPrefs.SetString("Fire 2", GetPath("Fire", 1));
+        PlayerPrefs.SetString("Kill 1", GetPath("Kill", 0));
+        PlayerPrefs.SetString("Kill 2", GetPath("Kill", 1));
+        PlayerPrefs.SetString("Pause 1", GetPath("Pause", 0));
+        PlayerPrefs.SetString("Pause 2", GetPath("Pause", 1));
         PlayerPrefs.Save();
+    }
+
+    string GetPath(string actionName, int bindingNumber)
+    {
+        return inputActionAsset[actionName].bindings[bindingNumber].effectivePath;
     }
 
     void LoadSettings()
@@ -74,6 +90,26 @@ public class SettingsManager : MonoBehaviour
         settingsSliders[1].value = PlayerPrefs.GetFloat("SFX Volume", defaultSliderValue);
         turnSensitivityValue = PlayerPrefs.GetFloat("Turn Sensitivity", defaultSliderValue) * -4;
         settingsSliders[2].value = PlayerPrefs.GetFloat("Turn Sensitivity", defaultSliderValue);
+        fire1.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Fire 1", "<Keyboard>/Space"));
+        fire2.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Fire 2"));
+        kill1.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Kill 1", "<Keyboard>/K"));
+        kill2.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Kill 2"));
+        pause1.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Pause 1", "<Keyboard>/Escape"));
+        pause2.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Pause 2", "<Keyboard>/P"));
+    }
+
+    string BindingPathToString(string bindingPath)
+    {
+        if (bindingPath == null || bindingPath == "")
+        {
+            bindingPath = "None";
+        }
+        else
+        {
+            bindingPath = InputControlPath.ToHumanReadableString(bindingPath, InputControlPath.HumanReadableStringOptions.OmitDevice);
+        }
+
+        return bindingPath;
     }
 
     public void ResetSettings()
@@ -82,6 +118,18 @@ public class SettingsManager : MonoBehaviour
         {
             slider.value = defaultSliderValue;
         }
+
+        for (int i = 0; i < bindings.Length; i++)
+        {
+            bindings[i].GetComponent<TextMeshProUGUI>().text = BindingPathToString(defaultPaths[i]);
+        }
+
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Fire"], 0, defaultPaths[0]);
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Fire"], 1, defaultPaths[1]);
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Kill"], 0, defaultPaths[2]);
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Kill"], 1, defaultPaths[3]);
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Pause"], 0, defaultPaths[4]);
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Pause"], 1, defaultPaths[5]);
     }
 
     public void UpdateBackgroundVolume()
@@ -126,5 +174,15 @@ public class SettingsManager : MonoBehaviour
     public float GetTurnSensitivity()
     {
         return turnSensitivityValue;
+    }
+
+    public void UpdateBindings()
+    {
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Fire"], 0, PlayerPrefs.GetString("Fire 1"));
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Fire"], 1, PlayerPrefs.GetString("Fire 2"));
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Kill"], 0, PlayerPrefs.GetString("Kill 1"));
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Kill"], 1, PlayerPrefs.GetString("Kill 2"));
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Pause"], 0, PlayerPrefs.GetString("Pause 1"));
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Pause"], 1, PlayerPrefs.GetString("Pause 2"));
     }
 }
