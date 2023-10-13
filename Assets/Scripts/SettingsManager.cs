@@ -21,6 +21,7 @@ public class SettingsManager : MonoBehaviour
     [Header("Controls Settings")]
     [SerializeField] GameObject turnSensitivity;
     float turnSensitivityValue;
+    float minTurnSensitivity = 50f;
     [Header("Key Bindings")]
     [SerializeField] InputActionAsset inputActionAsset;
     [SerializeField] GameObject fire1;
@@ -34,9 +35,11 @@ public class SettingsManager : MonoBehaviour
     void Awake()
     {
         LoadSettings();
+
         UpdateBackgroundVolume();
         UpdateSFXVolume();
         UpdateBindings();
+        UpdateControls();
     }
 
     void Start()
@@ -88,7 +91,7 @@ public class SettingsManager : MonoBehaviour
         settingsSliders[0].value = PlayerPrefs.GetFloat("Background Volume", defaultSliderValue);
         sfxVolumeValue = PlayerPrefs.GetFloat("SFX Volume", defaultSliderValue) / 100f;
         settingsSliders[1].value = PlayerPrefs.GetFloat("SFX Volume", defaultSliderValue);
-        turnSensitivityValue = PlayerPrefs.GetFloat("Turn Sensitivity", defaultSliderValue) * -4;
+        turnSensitivityValue = minTurnSensitivity + PlayerPrefs.GetFloat("Turn Sensitivity", defaultSliderValue) * 2;
         settingsSliders[2].value = PlayerPrefs.GetFloat("Turn Sensitivity", defaultSliderValue);
         fire1.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Fire 1", "<Keyboard>/Space"));
         fire2.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Fire 2"));
@@ -168,12 +171,20 @@ public class SettingsManager : MonoBehaviour
 
     public void SetTurnSensitivity(float value)
     {
-        turnSensitivityValue = value * -4;
+        turnSensitivityValue = minTurnSensitivity + value * 2;
     }
 
     public float GetTurnSensitivity()
     {
         return turnSensitivityValue;
+    }
+
+    public void UpdateControls()
+    {
+        if (FindObjectOfType<GunController>())
+        {
+            FindObjectOfType<GunController>().SetTurnSensitivity(turnSensitivityValue);
+        }
     }
 
     public void UpdateBindings()

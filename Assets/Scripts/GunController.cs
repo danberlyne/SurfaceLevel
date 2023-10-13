@@ -17,7 +17,7 @@ public class GunController : MonoBehaviour
     [SerializeField] float startDelay = 4.0f;
     bool disabled = false;
     Vector2 turnInput;
-    [SerializeField] float turnSensitivity = -200;
+    [SerializeField] float turnSensitivity = -200f;
     // Quaternion w-value for a right angle. Note, the w-value does not encode the direction of rotation, but the x, y, z values do.
     static readonly float rightAngle = Mathf.Sqrt(2) / 2;
     // Determines how much the rotation range of the gun is restricted.
@@ -162,5 +162,10 @@ public class GunController : MonoBehaviour
             GetComponent<AudioSource>().PlayOneShot(selfDestruction);
             Destroy(proj);
         }
+    }
+
+    public void SetTurnSensitivity(float newSensitivity)
+    {
+        turnSensitivity = newSensitivity;
     }
 }
