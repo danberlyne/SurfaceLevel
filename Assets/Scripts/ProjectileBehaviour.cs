@@ -8,7 +8,7 @@ public class ProjectileBehaviour : MonoBehaviour
     int destroyedThisShot = 0;
     Rigidbody2D projectileRB;
     float gunAngle;
-    [SerializeField] float projectileSpeed = 1f;
+    float projectileSpeed;
     ScoreKeeper scoreKeeper;
     GameManager gameManager;
     [SerializeField] float slowMotionMultiplier = 0.1f;
@@ -25,6 +25,7 @@ public class ProjectileBehaviour : MonoBehaviour
         destroyedThisShot = 0;
         // Angle that gun is pointing relative to straight downwards.
         gunAngle = Mathf.Sign(transform.rotation.z) * 2 * Mathf.Acos(transform.rotation.w);
+        projectileSpeed = FindObjectOfType<GunController>().GetProjectileSpeed();
         projectileRB.velocity = new Vector2(projectileSpeed * Mathf.Sin(gunAngle), -projectileSpeed * Mathf.Cos(gunAngle));
     }
 

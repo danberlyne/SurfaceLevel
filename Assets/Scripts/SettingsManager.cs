@@ -21,7 +21,8 @@ public class SettingsManager : MonoBehaviour
     [Header("Controls Settings")]
     [SerializeField] GameObject turnSensitivity;
     float turnSensitivityValue;
-    float minTurnSensitivity = 50f;
+    [SerializeField] float minTurnSensitivity = 50f;
+    [SerializeField] float sensitivityRange = 1f;
     [Header("Key Bindings")]
     [SerializeField] InputActionAsset inputActionAsset;
     [SerializeField] GameObject fire1;
@@ -91,7 +92,7 @@ public class SettingsManager : MonoBehaviour
         settingsSliders[0].value = PlayerPrefs.GetFloat("Background Volume", defaultSliderValue);
         sfxVolumeValue = PlayerPrefs.GetFloat("SFX Volume", defaultSliderValue) / 100f;
         settingsSliders[1].value = PlayerPrefs.GetFloat("SFX Volume", defaultSliderValue);
-        turnSensitivityValue = minTurnSensitivity + PlayerPrefs.GetFloat("Turn Sensitivity", defaultSliderValue) * 2;
+        turnSensitivityValue = minTurnSensitivity + PlayerPrefs.GetFloat("Turn Sensitivity", defaultSliderValue) * sensitivityRange;
         settingsSliders[2].value = PlayerPrefs.GetFloat("Turn Sensitivity", defaultSliderValue);
         fire1.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Fire 1", "<Keyboard>/Space"));
         fire2.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Fire 2"));
@@ -171,7 +172,7 @@ public class SettingsManager : MonoBehaviour
 
     public void SetTurnSensitivity(float value)
     {
-        turnSensitivityValue = minTurnSensitivity + value * 2;
+        turnSensitivityValue = minTurnSensitivity + value * sensitivityRange;
     }
 
     public float GetTurnSensitivity()

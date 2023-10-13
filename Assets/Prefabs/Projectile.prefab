@@ -137,7 +137,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0.5
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -163,9 +163,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   destructionDelay: 0.5
-  projectileSpeed: 15
   slowMotionMultiplier: 0.1
-  destructionEffect: {fileID: 6308380574338265250, guid: 4f6823c2f02db1544bbed41b3f71d83c, type: 3}
 --- !u!1 &7604089187014603553
 GameObject:
   m_ObjectHideFlags: 0

@@ -2917,6 +2917,34 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1714337943288464170, guid: dbd3bdea8b2fe0649b244215d23aa4b3, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.b
+      value: 0.5019608
+      objectReference: {fileID: 0}
+    - target: {fileID: 1714337943288464170, guid: dbd3bdea8b2fe0649b244215d23aa4b3, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1714337943288464170, guid: dbd3bdea8b2fe0649b244215d23aa4b3, type: 3}
+      propertyPath: m_Parameters.colorGradient.key0.r
+      value: 0.5019608
+      objectReference: {fileID: 0}
+    - target: {fileID: 1714337943288464170, guid: dbd3bdea8b2fe0649b244215d23aa4b3, type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1714337943288464170, guid: dbd3bdea8b2fe0649b244215d23aa4b3, type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.b
+      value: 0.2509804
+      objectReference: {fileID: 0}
+    - target: {fileID: 1714337943288464170, guid: dbd3bdea8b2fe0649b244215d23aa4b3, type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.g
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1714337943288464170, guid: dbd3bdea8b2fe0649b244215d23aa4b3, type: 3}
+      propertyPath: m_Parameters.colorGradient.key1.r
+      value: 0.2509804
+      objectReference: {fileID: 0}
     - target: {fileID: 2082861327699298490, guid: dbd3bdea8b2fe0649b244215d23aa4b3, type: 3}
       propertyPath: m_Name
       value: GunCentre

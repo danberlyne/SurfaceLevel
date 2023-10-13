@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,6 +15,7 @@ where (v1, v2, v3) is the rotation axis as a vector and theta is the rotation an
 
 public class GunController : MonoBehaviour
 {
+    [Header("General")]
     [SerializeField] float startDelay = 4.0f;
     bool disabled = false;
     Vector2 turnInput;
@@ -26,12 +28,18 @@ public class GunController : MonoBehaviour
     bool isPlaying = false;
     SliderController sliderController;
     bool hasSufficientEnergy = true;
+    [Header("Projectiles")]
     [SerializeField] GameObject projectile;
     [SerializeField] Transform projectileSpawn;
+    [SerializeField] float projectileSpeed = 15f;
     [SerializeField] int energyCost = 10;
     DeathBehaviour death;
     [SerializeField] AudioClip selfDestruction;
     GameObject[] activeProjectiles;
+    [Header("Trajectory")]
+    [SerializeField] LineRenderer lineRenderer;
+    List<Vector3> path;
+    [SerializeField] float trajectoryLength = 1f;
 
     void Awake()
     {
@@ -61,6 +69,15 @@ public class GunController : MonoBehaviour
             float turnAmount = turnInput.x * turnSensitivity * Time.deltaTime;
             TurnTurret(turnAmount);
             UpdateTurnSFX(turnAmount);
+
+            if (!death.GetIsDead())
+            {
+                HideTrajectory();
+            }
+            else
+            {
+                DisplayTrajectory();
+            }
         }
     }
 
@@ -116,6 +133,44 @@ public class GunController : MonoBehaviour
         }
     }
 
+    void DisplayTrajectory()
+    {
+        lineRenderer.enabled = true;
+        path = SimulateTrajectory();
+        RenderTrajectory(path);
+    }
+
+    List<Vector3> SimulateTrajectory()
+    {
+        float gunAngle = Mathf.Sign(transform.rotation.z) * 2 * Mathf.Acos(transform.rotation.w);
+        Vector3 position = projectileSpawn.position;
+        Vector3 velocity = new Vector3(projectileSpeed * Mathf.Sin(gunAngle), -projectileSpeed * Mathf.Cos(gunAngle), 0);
+        List<Vector3> path = new List<Vector3>();
+
+        float duration = trajectoryLength; 
+        float timestep = Time.fixedDeltaTime;
+        for (float t = 0f; t < duration; t += timestep)
+        {
+            velocity += Physics.gravity * timestep;
+            velocity = velocity * (1 - timestep * projectile.GetComponent<Rigidbody2D>().drag);
+            position += velocity * timestep;
+            path.Add(position);
+        }
+
+        return path;
+    }
+
+    void RenderTrajectory(List<Vector3> path)
+    {
+        lineRenderer.positionCount = path.Count;
+        lineRenderer.SetPositions(path.ToArray());
+    }
+
+    void HideTrajectory()
+    {
+        lineRenderer.enabled = false;
+    }
+
     void UpdateTurnSFX(float turnAmount)
     {
         if (turnAmount != 0 && !isPlaying)
@@ -167,5 +222,10 @@ public class GunController : MonoBehaviour
     public void SetTurnSensitivity(float newSensitivity)
     {
         turnSensitivity = newSensitivity;
+    }
+
+    public float GetProjectileSpeed()
+    {
+        return projectileSpeed;
     }
 }
