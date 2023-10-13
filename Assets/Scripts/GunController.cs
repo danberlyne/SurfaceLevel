@@ -1,6 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.IO;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -38,8 +38,10 @@ public class GunController : MonoBehaviour
     GameObject[] activeProjectiles;
     [Header("Trajectory")]
     [SerializeField] LineRenderer lineRenderer;
-    List<Vector3> path;
+    List<Vector2> path;
     [SerializeField] float trajectoryLength = 1f;
+    List<Collider2D> colliders;
+    bool hasCollided;
 
     void Awake()
     {
@@ -49,6 +51,11 @@ public class GunController : MonoBehaviour
     void Start()
     {
         StartCoroutine(StartUp());
+    }
+
+    void OnEnable()
+    {
+        colliders = FindObjectsOfType<Collider2D>().ToList();
     }
 
     IEnumerator StartUp()
@@ -140,30 +147,54 @@ public class GunController : MonoBehaviour
         RenderTrajectory(path);
     }
 
-    List<Vector3> SimulateTrajectory()
+    List<Vector2> SimulateTrajectory()
     {
         float gunAngle = Mathf.Sign(transform.rotation.z) * 2 * Mathf.Acos(transform.rotation.w);
-        Vector3 position = projectileSpawn.position;
-        Vector3 velocity = new Vector3(projectileSpeed * Mathf.Sin(gunAngle), -projectileSpeed * Mathf.Cos(gunAngle), 0);
-        List<Vector3> path = new List<Vector3>();
+        Vector2 position = projectileSpawn.position;
+        Vector2 velocity = new Vector2(projectileSpeed * Mathf.Sin(gunAngle), -projectileSpeed * Mathf.Cos(gunAngle));
+        List<Vector2> path = new List<Vector2>();
 
         float duration = trajectoryLength; 
         float timestep = Time.fixedDeltaTime;
         for (float t = 0f; t < duration; t += timestep)
         {
-            velocity += Physics.gravity * timestep;
-            velocity = velocity * (1 - timestep * projectile.GetComponent<Rigidbody2D>().drag);
-            position += velocity * timestep;
+            hasCollided = false;
+
+            foreach (Collider2D collider in colliders)
+            {
+                if (collider.bounds.Contains(position) && collider.isTrigger && collider.gameObject.GetComponent<Teleporter>()) // If position is inside a collider and collider is a trigger and collider is a teleporter, teleport the trajectory.
+                {
+                    return path;
+                }
+                else if (collider.bounds.Contains(position)) // Else if position is inside a collider, end the path.
+                {
+                    return path;
+                }
+            }
+
+            if (!hasCollided)
+            {
+                velocity += (Vector2) Physics.gravity * timestep;
+                velocity = velocity * (1 - timestep * projectile.GetComponent<Rigidbody2D>().drag);
+                position += velocity * timestep;
+            }
+
             path.Add(position);
         }
 
         return path;
     }
 
-    void RenderTrajectory(List<Vector3> path)
+    void RenderTrajectory(List<Vector2> path)
     {
-        lineRenderer.positionCount = path.Count;
-        lineRenderer.SetPositions(path.ToArray());
+        List<Vector3> path3 = new List<Vector3>();
+        foreach (Vector3 v in path)
+        {
+            path3.Add(v);
+        }
+
+        lineRenderer.positionCount = path3.Count;
+        lineRenderer.SetPositions(path3.ToArray());
     }
 
     void HideTrajectory()
@@ -227,5 +258,10 @@ public class GunController : MonoBehaviour
     public float GetProjectileSpeed()
     {
         return projectileSpeed;
+    }
+
+    public void RemoveCollider(Collider2D collider)
+    {
+        colliders.Remove(collider);
     }
 }

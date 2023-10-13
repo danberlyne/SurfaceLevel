@@ -44,6 +44,7 @@ public class ProjectileBehaviour : MonoBehaviour
             if (!isDestroyed)
             {
                 fragBehaviour.SetIsDestroyed();
+                FindObjectOfType<GunController>().RemoveCollider(other.collider);
                 Destroy(other.gameObject, destructionDelay);
                 scoreKeeper.UpdateScore();
                 destroyedThisShot += 1;
