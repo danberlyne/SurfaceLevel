@@ -50,7 +50,6 @@ public class Teleporter : MonoBehaviour
     {
         Collider2D boundaryCollider = GetComponent<Collider2D>();
         Vector2 projectilePosition = projectile.gameObject.transform.position;
-        Vector2 projectilePosition2D = projectile.gameObject.transform.position;
         Vector2 collisionPoint = boundaryCollider.ClosestPoint(projectilePosition);
         Vector2 pointOfContactRelBoundary = new Vector2 (collisionPoint.x, collisionPoint.y) - boundaryAnchor;
         if (Vector2.Angle(normalVector, projectile.attachedRigidbody.velocity) > 90)
@@ -71,4 +70,13 @@ public class Teleporter : MonoBehaviour
         return normalVector;
     }
 
+    public Teleporter GetOtherTeleporter()
+    {
+        return otherTeleporter;
+    }
+
+    public float GetTeleportationOffset()
+    {
+        return teleportationOffset;
+    }
 }

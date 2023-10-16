@@ -37,8 +37,8 @@ public class GunController : MonoBehaviour
     [SerializeField] AudioClip selfDestruction;
     GameObject[] activeProjectiles;
     [Header("Trajectory")]
-    [SerializeField] LineRenderer lineRenderer;
-    List<Vector2> path;
+    [SerializeField] LineRenderer[] lineRenderers = new LineRenderer[10];
+    IEnumerable<List<Vector2>> path;
     [SerializeField] float trajectoryLength = 1f;
     List<Collider2D> colliders;
     bool hasCollided;
@@ -142,17 +142,22 @@ public class GunController : MonoBehaviour
 
     void DisplayTrajectory()
     {
-        lineRenderer.enabled = true;
+        foreach (LineRenderer lineRenderer in lineRenderers)
+        {
+            lineRenderer.enabled = true;
+        }
+
         path = SimulateTrajectory();
         RenderTrajectory(path);
     }
 
-    List<Vector2> SimulateTrajectory()
+    IEnumerable<List<Vector2>> SimulateTrajectory()
     {
         float gunAngle = Mathf.Sign(transform.rotation.z) * 2 * Mathf.Acos(transform.rotation.w);
         Vector2 position = projectileSpawn.position;
         Vector2 velocity = new Vector2(projectileSpeed * Mathf.Sin(gunAngle), -projectileSpeed * Mathf.Cos(gunAngle));
-        List<Vector2> path = new List<Vector2>();
+        List<Vector2> pathSegment = new List<Vector2>();
+        int numSegments = 1;
 
         float duration = trajectoryLength; 
         float timestep = Time.fixedDeltaTime;
@@ -162,13 +167,44 @@ public class GunController : MonoBehaviour
 
             foreach (Collider2D collider in colliders)
             {
-                if (collider.bounds.Contains(position) && collider.isTrigger && collider.gameObject.GetComponent<Teleporter>()) // If position is inside a collider and collider is a trigger and collider is a teleporter, teleport the trajectory.
+                if (collider.bounds.Contains(position)                 // If position is inside a collider
+                    && collider.isTrigger                              // and collider is a trigger
+                    && collider.gameObject.GetComponent<Teleporter>()) // and collider is a teleporter, teleport the trajectory.
                 {
-                    return path;
+                    Teleporter teleporter = collider.gameObject.GetComponent<Teleporter>();
+                    Teleporter otherTeleporter = teleporter.GetOtherTeleporter();
+                    Vector2 collisionPoint = collider.ClosestPoint(position);
+                    Vector2 boundaryAnchor = teleporter.GetBoundaryAnchor();
+                    Vector2 pointOfContactRelBoundary = collisionPoint - boundaryAnchor;
+                    Vector2 normalVector = teleporter.GetNormalVector();
+
+                    if (Vector2.Angle(normalVector, velocity) > 90)
+                    {
+                        Vector2 newContactRelBoundary = Teleporter.Rotate(pointOfContactRelBoundary, 
+                                                                          Vector2.SignedAngle(-normalVector, otherTeleporter.GetNormalVector()));
+                        position = otherTeleporter.GetBoundaryAnchor() + newContactRelBoundary + otherTeleporter.GetNormalVector() * teleporter.GetTeleportationOffset();
+                        velocity = Teleporter.Rotate(velocity, Vector2.SignedAngle(-normalVector, otherTeleporter.GetNormalVector()));
+                        position += velocity * timestep;
+                        hasCollided = true;
+
+                        yield return pathSegment; // End this path segment and start a new one at the teleported location.
+
+                        if (numSegments >= lineRenderers.Length) // If we have reached the maximum number of segments, terminate the path entirely.
+                        {
+                            yield break;
+                        }
+                        else
+                        {
+                            numSegments++;
+                            pathSegment = new List<Vector2>();
+                            break;
+                        }
+                    }
                 }
-                else if (collider.bounds.Contains(position)) // Else if position is inside a collider, end the path.
+                else if (collider.bounds.Contains(position)) // If position is inside a non-teleporter collider, end the path.
                 {
-                    return path;
+                    yield return pathSegment;
+                    yield break;
                 }
             }
 
@@ -179,27 +215,46 @@ public class GunController : MonoBehaviour
                 position += velocity * timestep;
             }
 
-            path.Add(position);
+            pathSegment.Add(position);
         }
 
-        return path;
+        yield return pathSegment;
     }
 
-    void RenderTrajectory(List<Vector2> path)
+    void RenderTrajectory(IEnumerable<List<Vector2>> path)
     {
-        List<Vector3> path3 = new List<Vector3>();
-        foreach (Vector3 v in path)
+        foreach (LineRenderer lr in lineRenderers)
         {
-            path3.Add(v);
+            lr.positionCount = 0;
         }
 
-        lineRenderer.positionCount = path3.Count;
-        lineRenderer.SetPositions(path3.ToArray());
+        List<Vector3> path3 = new List<Vector3>();
+        LineRenderer lineRenderer;
+        int segmentIndex = 0;
+
+        foreach (List<Vector2> pathSegment in path)
+        {
+            lineRenderer = lineRenderers[segmentIndex];
+
+            foreach (Vector3 v in pathSegment)
+            {
+                path3.Add(v);
+            }
+
+            lineRenderer.positionCount = path3.Count;
+            lineRenderer.SetPositions(path3.ToArray());
+
+            path3 = new List<Vector3>();
+            segmentIndex++;
+        }
     }
 
     void HideTrajectory()
     {
-        lineRenderer.enabled = false;
+        foreach (LineRenderer lineRenderer in lineRenderers)
+        {
+            lineRenderer.enabled = false;
+        }
     }
 
     void UpdateTurnSFX(float turnAmount)
