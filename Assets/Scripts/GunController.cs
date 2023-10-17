@@ -42,6 +42,8 @@ public class GunController : MonoBehaviour
     [SerializeField] float trajectoryLength = 1f;
     List<Collider2D> colliders;
     bool hasCollided;
+    GradientColorKey[] colours = new GradientColorKey[2];
+    GradientAlphaKey[] alphas = new GradientAlphaKey[2];
 
     void Awake()
     {
@@ -155,7 +157,9 @@ public class GunController : MonoBehaviour
     {
         float gunAngle = Mathf.Sign(transform.rotation.z) * 2 * Mathf.Acos(transform.rotation.w);
         Vector2 position = projectileSpawn.position;
+        Vector2 nextPosition;
         Vector2 velocity = new Vector2(projectileSpeed * Mathf.Sin(gunAngle), -projectileSpeed * Mathf.Cos(gunAngle));
+        Vector2 nextVelocity;
         List<Vector2> pathSegment = new List<Vector2>();
         int numSegments = 1;
 
@@ -167,13 +171,17 @@ public class GunController : MonoBehaviour
 
             foreach (Collider2D collider in colliders)
             {
-                if (collider.bounds.Contains(position)                 // If position is inside a collider
-                    && collider.isTrigger                              // and collider is a trigger
-                    && collider.gameObject.GetComponent<Teleporter>()) // and collider is a teleporter, teleport the trajectory.
+                nextVelocity = velocity + (Vector2) Physics.gravity * timestep;
+                nextVelocity = nextVelocity * (1 - timestep * projectile.GetComponent<Rigidbody2D>().drag);
+                nextPosition = position + nextVelocity * timestep;
+
+                if (collider.ClosestPoint(nextPosition) == nextPosition // If position is inside a collider
+                    && collider.isTrigger                               // and collider is a trigger
+                    && collider.gameObject.GetComponent<Teleporter>())  // and collider is a teleporter, teleport the trajectory.
                 {
                     Teleporter teleporter = collider.gameObject.GetComponent<Teleporter>();
                     Teleporter otherTeleporter = teleporter.GetOtherTeleporter();
-                    Vector2 collisionPoint = collider.ClosestPoint(position);
+                    Vector2 collisionPoint = collider.ClosestPoint(nextPosition);
                     Vector2 boundaryAnchor = teleporter.GetBoundaryAnchor();
                     Vector2 pointOfContactRelBoundary = collisionPoint - boundaryAnchor;
                     Vector2 normalVector = teleporter.GetNormalVector();
@@ -184,7 +192,6 @@ public class GunController : MonoBehaviour
                                                                           Vector2.SignedAngle(-normalVector, otherTeleporter.GetNormalVector()));
                         position = otherTeleporter.GetBoundaryAnchor() + newContactRelBoundary + otherTeleporter.GetNormalVector() * teleporter.GetTeleportationOffset();
                         velocity = Teleporter.Rotate(velocity, Vector2.SignedAngle(-normalVector, otherTeleporter.GetNormalVector()));
-                        position += velocity * timestep;
                         hasCollided = true;
 
                         yield return pathSegment; // End this path segment and start a new one at the teleported location.
@@ -201,7 +208,7 @@ public class GunController : MonoBehaviour
                         }
                     }
                 }
-                else if (collider.bounds.Contains(position)) // If position is inside a non-teleporter collider, end the path.
+                else if (collider.ClosestPoint(position) == position) // If position is inside a non-teleporter collider, end the path.
                 {
                     yield return pathSegment;
                     yield break;
@@ -228,13 +235,16 @@ public class GunController : MonoBehaviour
             lr.positionCount = 0;
         }
 
-        List<Vector3> path3 = new List<Vector3>();
+        List<Vector3> path3;
         LineRenderer lineRenderer;
+        Gradient lineColourGradient;
         int segmentIndex = 0;
+        float pathLength = trajectoryLength / Time.fixedDeltaTime;
 
         foreach (List<Vector2> pathSegment in path)
         {
             lineRenderer = lineRenderers[segmentIndex];
+            path3 = new List<Vector3>();
 
             foreach (Vector3 v in pathSegment)
             {
@@ -244,7 +254,20 @@ public class GunController : MonoBehaviour
             lineRenderer.positionCount = path3.Count;
             lineRenderer.SetPositions(path3.ToArray());
 
-            path3 = new List<Vector3>();
+            lineColourGradient = lineRenderer.colorGradient;
+            colours[0].time = 0;
+            colours[0].color = (segmentIndex == 0) ? new Color (196f/255f, 0f, 196f/255f) : colours[1].color;
+            colours[1].time = 1;
+            colours[1].color = new Color (colours[0].color.r - (path3.Count / pathLength) * 132f/255f, 
+                                          0f, 
+                                          colours[0].color.b - (path3.Count / pathLength) * 132f/255f);
+            alphas[0].time = 0;
+            alphas[0].alpha = (segmentIndex == 0) ? 1 : alphas[1].alpha;
+            alphas[1].time = 1;
+            alphas[1].alpha = alphas[0].alpha - path3.Count / pathLength;
+            lineColourGradient.SetKeys(colours, alphas);
+            lineRenderer.colorGradient = lineColourGradient;
+
             segmentIndex++;
         }
     }

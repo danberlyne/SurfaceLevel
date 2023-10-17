@@ -70,7 +70,7 @@ MonoBehaviour:
   - {fileID: 2108560928948953757}
   - {fileID: 7814650231713871082}
   - {fileID: 5434532340562185295}
-  trajectoryLength: 1
+  trajectoryLength: 1.2
 --- !u!82 &-4335737430001879594
 AudioSource:
   m_ObjectHideFlags: 0
