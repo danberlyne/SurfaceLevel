@@ -11,14 +11,26 @@ public class GameManager : MonoBehaviour
 {
     GunController gunController;
     int remainingFragments;
+
+    [Header("UI")]
     [SerializeField] GameObject overlayCanvas;
     [SerializeField] GameObject pauseMenuCanvas;
+    [SerializeField] GameObject effectsCanvas;
+
+    [Header("Startup")]
     [SerializeField] float startDelay = 4.0f;
     [SerializeField] float loadDelay = 0.5f;
+
+    [Header("Game Over")]
     [SerializeField] GameObject gameOverGraphic;
     [SerializeField] GameObject gameOverButtons;
     [SerializeField] float gameOverFadeDuration = 3.0f;
     [SerializeField] float redFadeAmount = 0.5f;
+
+    [Header("Effects")]
+    [SerializeField] EffectButtons effectButtons;
+
+    [Header("Debugging")]
     [SerializeField] bool slowTime = false;
     [SerializeField] float slowMultiplier = 0.1f;
 
@@ -26,6 +38,7 @@ public class GameManager : MonoBehaviour
     {
         gunController = FindObjectOfType<GunController>();
         remainingFragments = GameObject.FindGameObjectsWithTag("Fragment").Length;
+        effectButtons.DisableInactiveEffectButtons();
         StartCoroutine(StartUp());
     }
 
@@ -48,6 +61,7 @@ public class GameManager : MonoBehaviour
         if (currentSceneIndex == 1)
         {
             overlayCanvas.SetActive(true);
+            effectsCanvas.SetActive(true);
         }
     }
 

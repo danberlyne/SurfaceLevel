@@ -28,6 +28,7 @@ public class GunController : MonoBehaviour
     bool isPlaying = false;
     SliderController sliderController;
     bool hasSufficientEnergy = true;
+
     [Header("Projectiles")]
     [SerializeField] GameObject projectile;
     [SerializeField] Transform projectileSpawn;
@@ -36,6 +37,7 @@ public class GunController : MonoBehaviour
     DeathBehaviour death;
     [SerializeField] AudioClip selfDestruction;
     GameObject[] activeProjectiles;
+
     [Header("Trajectory")]
     [SerializeField] LineRenderer[] lineRenderers = new LineRenderer[10];
     IEnumerable<List<Vector2>> path;

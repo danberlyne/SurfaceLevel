@@ -8,6 +8,7 @@ using UnityEngine.UI;
 public class EffectButtons : MonoBehaviour
 {
     [SerializeField] GameObject[] effectButtons;
+    [SerializeField] bool[] enabledEffects;
     [SerializeField] int energyCost = 4;
     SliderController sliderController;
 
@@ -46,22 +47,29 @@ public class EffectButtons : MonoBehaviour
     {
         for (int i = 0; i < effectButtons.Length; i++)
         {
-            Button button = effectButtons[i].GetComponent<Button>();
-            TMP_Text text = effectButtons[i].GetComponentInChildren<TMP_Text>();
-            text.overrideColorTags = true;
-            Color textColour = text.color;
-
-            if (button.interactable == false)
+            if (enabledEffects[i])
             {
-                textColour.a = 0.25f;
-                text.color = textColour;
+                GreyOut(i);
             }
-            else
-            {
-                textColour.a = 1.0f;
-                text.color = textColour;
-            }
+        }
+    }
 
+    void GreyOut(int index)
+    {
+        Button button = effectButtons[index].GetComponent<Button>();
+        TMP_Text text = effectButtons[index].GetComponentInChildren<TMP_Text>();
+        text.overrideColorTags = true;
+        Color textColour = text.color;
+
+        if (button.interactable == false)
+        {
+            textColour.a = 0.25f;
+            text.color = textColour;
+        }
+        else
+        {
+            textColour.a = 1.0f;
+            text.color = textColour;
         }
     }
 
@@ -93,7 +101,10 @@ public class EffectButtons : MonoBehaviour
     {
         for (int i = 0; i < effectButtons.Length; i++)
         {
-            effectButtons[i].GetComponent<Button>().interactable = true;
+            if (enabledEffects[i])
+            {
+                effectButtons[i].GetComponent<Button>().interactable = true;
+            }
         }
         GreyOut();
     }
@@ -103,6 +114,18 @@ public class EffectButtons : MonoBehaviour
         for (int i = 0; i < effectButtons.Length; i++)
         {
             effectButtons[i].GetComponent<ToggleEffect>().TurnOff();
+        }
+    }
+
+    public void DisableInactiveEffectButtons()
+    {
+        for (int i = 0; i < effectButtons.Length; i++)
+        {
+            if (!enabledEffects[i])
+            {
+                effectButtons[i].GetComponent<Button>().interactable = false;
+                GreyOut(i);
+            }
         }
     }
 }

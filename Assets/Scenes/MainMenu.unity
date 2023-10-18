@@ -1132,6 +1132,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SettingsManager
       objectReference: {fileID: 0}
+    - target: {fileID: 4910200007853008548, guid: d339ae3cf6c88bd468a16fd6dcbb650c, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4938849934684997672, guid: d339ae3cf6c88bd468a16fd6dcbb650c, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
