@@ -111,4 +111,9 @@ public class MenuManager : MonoBehaviour
             audioSource.PlayOneShot(disabledSound);
         }
     }
+
+    public void ExitGame()
+    {
+        Application.Quit();
+    }
 }

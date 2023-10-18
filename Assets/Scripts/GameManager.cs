@@ -57,8 +57,8 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
-        if (currentSceneIndex == 1)
+        string currentSceneName = SceneManager.GetActiveScene().name;
+        if (currentSceneName == "Level1-1")
         {
             overlayCanvas.SetActive(true);
             effectsCanvas.SetActive(true);
