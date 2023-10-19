@@ -160,13 +160,6 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(currentSceneIndex);
     }
 
-    public void QuitToMainMenu()
-    {
-        GameSession gameSession = FindObjectOfType<GameSession>();
-        Destroy(gameSession.gameObject);
-        SceneManager.LoadScene(0);
-    }
-
     void OnPause(InputValue value)
     {
         if (value.isPressed && !pauseMenuCanvas.activeInHierarchy)

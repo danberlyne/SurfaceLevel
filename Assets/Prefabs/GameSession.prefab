@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 3017146308664094212}
   - component: {fileID: 5006808438786215133}
   m_Layer: 5
-  m_Name: MultihitText
+  m_Name: MultihitAmount
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -361,6 +361,14 @@ PrefabInstance:
       propertyPath: m_ChildAlignment
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 2255825368543304408, guid: d6c952d432a1fe640a992f6f60ab7749, type: 3}
+      propertyPath: levelHeader
+      value: 
+      objectReference: {fileID: 8767997545835304818}
+    - target: {fileID: 2255825368543304408, guid: d6c952d432a1fe640a992f6f60ab7749, type: 3}
+      propertyPath: multihitAmount
+      value: 
+      objectReference: {fileID: 8171234411599871343}
     - target: {fileID: 3185213703974211935, guid: d6c952d432a1fe640a992f6f60ab7749, type: 3}
       propertyPath: m_AnchoredPosition.y
       value: 213

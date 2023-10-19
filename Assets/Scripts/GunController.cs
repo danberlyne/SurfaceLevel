@@ -28,6 +28,7 @@ public class GunController : MonoBehaviour
     bool isPlaying = false;
     SliderController sliderController;
     bool hasSufficientEnergy = true;
+    [SerializeField] AudioSource firingSFX;
 
     [Header("Projectiles")]
     [SerializeField] GameObject projectile;
@@ -92,48 +93,6 @@ public class GunController : MonoBehaviour
         }
     }
 
-    void OnTurn(InputValue value)
-    {
-        turnInput = value.Get<Vector2>();
-    }
-
-    void OnFire(InputValue value)
-    {
-        sliderController = FindObjectOfType<SliderController>();
-        CheckEnergy();
-
-        if (!hasSufficientEnergy || !death.GetIsDead() || disabled)
-        {
-            return;
-        }
-
-        if (value.isPressed)
-        {
-            death.BirthProjectile();
-            Instantiate(projectile, projectileSpawn.position, transform.rotation);
-            sliderController.UpdateEnergy(energyCost);
-            FindObjectOfType<EffectButtons>().DisableEffectButtons();
-        }
-    }
-
-    void OnKill(InputValue value)
-    {
-        if (death.GetIsDead() || disabled)
-        {
-            return;
-        }
-
-        if (value.isPressed)
-        {
-            SelfDestruct();
-            EffectButtons effectButtons = FindObjectOfType<EffectButtons>();
-            effectButtons.EnableEffectButtons();
-            effectButtons.ToggleAllOff();
-            death.KillProjectile();
-            FindObjectOfType<GameManager>().CheckForLevelEnd();
-        }
-    }
-
     void TurnTurret(float turnAmount)
     {
         // 'true' if turnAmount is decreasing the absolute value of the current angle of rotation.
@@ -141,6 +100,28 @@ public class GunController : MonoBehaviour
         if (transform.rotation.w > rightAngle + angleRestriction || isOppositeDirection)
         {
             transform.Rotate(0, 0, turnAmount);
+        }
+    }
+
+    void UpdateTurnSFX(float turnAmount)
+    {
+        if (turnAmount != 0 && !isPlaying)
+        {
+            GetComponent<AudioSource>().Play();
+            isPlaying = true;
+        }
+        else if (turnAmount == 0 && isPlaying)
+        {
+            GetComponent<AudioSource>().Stop();
+            isPlaying = false;
+        }
+    }
+
+    void HideTrajectory()
+    {
+        foreach (LineRenderer lineRenderer in lineRenderers)
+        {
+            lineRenderer.enabled = false;
         }
     }
 
@@ -165,7 +146,7 @@ public class GunController : MonoBehaviour
         List<Vector2> pathSegment = new List<Vector2>();
         int numSegments = 1;
 
-        float duration = trajectoryLength; 
+        float duration = trajectoryLength;
         float timestep = Time.fixedDeltaTime;
         for (float t = 0f; t < duration; t += timestep)
         {
@@ -173,7 +154,7 @@ public class GunController : MonoBehaviour
 
             foreach (Collider2D collider in colliders)
             {
-                nextVelocity = velocity + (Vector2) Physics.gravity * timestep;
+                nextVelocity = velocity + (Vector2)Physics.gravity * timestep;
                 nextVelocity = nextVelocity * (1 - timestep * projectile.GetComponent<Rigidbody2D>().drag);
                 nextPosition = position + nextVelocity * timestep;
 
@@ -190,7 +171,7 @@ public class GunController : MonoBehaviour
 
                     if (Vector2.Angle(normalVector, velocity) > 90)
                     {
-                        Vector2 newContactRelBoundary = Teleporter.Rotate(pointOfContactRelBoundary, 
+                        Vector2 newContactRelBoundary = Teleporter.Rotate(pointOfContactRelBoundary,
                                                                           Vector2.SignedAngle(-normalVector, otherTeleporter.GetNormalVector()));
                         position = otherTeleporter.GetBoundaryAnchor() + newContactRelBoundary + otherTeleporter.GetNormalVector() * teleporter.GetTeleportationOffset();
                         velocity = Teleporter.Rotate(velocity, Vector2.SignedAngle(-normalVector, otherTeleporter.GetNormalVector()));
@@ -219,7 +200,7 @@ public class GunController : MonoBehaviour
 
             if (!hasCollided)
             {
-                velocity += (Vector2) Physics.gravity * timestep;
+                velocity += (Vector2)Physics.gravity * timestep;
                 velocity = velocity * (1 - timestep * projectile.GetComponent<Rigidbody2D>().drag);
                 position += velocity * timestep;
             }
@@ -258,11 +239,11 @@ public class GunController : MonoBehaviour
 
             lineColourGradient = lineRenderer.colorGradient;
             colours[0].time = 0;
-            colours[0].color = (segmentIndex == 0) ? new Color (196f/255f, 0f, 196f/255f) : colours[1].color;
+            colours[0].color = (segmentIndex == 0) ? new Color(196f / 255f, 0f, 196f / 255f) : colours[1].color;
             colours[1].time = 1;
-            colours[1].color = new Color (colours[0].color.r - (path3.Count / pathLength) * 132f/255f, 
-                                          0f, 
-                                          colours[0].color.b - (path3.Count / pathLength) * 132f/255f);
+            colours[1].color = new Color(colours[0].color.r - (path3.Count / pathLength) * 132f / 255f,
+                                          0f,
+                                          colours[0].color.b - (path3.Count / pathLength) * 132f / 255f);
             alphas[0].time = 0;
             alphas[0].alpha = (segmentIndex == 0) ? 1 : alphas[1].alpha;
             alphas[1].time = 1;
@@ -274,25 +255,28 @@ public class GunController : MonoBehaviour
         }
     }
 
-    void HideTrajectory()
+    void OnTurn(InputValue value)
     {
-        foreach (LineRenderer lineRenderer in lineRenderers)
-        {
-            lineRenderer.enabled = false;
-        }
+        turnInput = value.Get<Vector2>();
     }
 
-    void UpdateTurnSFX(float turnAmount)
+    void OnFire(InputValue value)
     {
-        if (turnAmount != 0 && !isPlaying)
+        sliderController = FindObjectOfType<SliderController>();
+        CheckEnergy();
+
+        if (!hasSufficientEnergy || !death.GetIsDead() || disabled)
         {
-            GetComponent<AudioSource>().Play();
-            isPlaying = true;
+            return;
         }
-        else if (turnAmount == 0 && isPlaying)
+
+        if (value.isPressed)
         {
-            GetComponent<AudioSource>().Stop();
-            isPlaying = false;
+            death.BirthProjectile();
+            Instantiate(projectile, projectileSpawn.position, transform.rotation);
+            firingSFX.Play();
+            sliderController.UpdateEnergy(energyCost);
+            FindObjectOfType<EffectButtons>().DisableEffectButtons();
         }
     }
 
@@ -300,6 +284,37 @@ public class GunController : MonoBehaviour
     {
         int energyAmount = sliderController.GetRemainingEnergy();
         hasSufficientEnergy = energyAmount >= energyCost;
+    }
+
+    void OnKill(InputValue value)
+    {
+        if (death.GetIsDead() || disabled)
+        {
+            return;
+        }
+
+        if (value.isPressed)
+        {
+            SelfDestruct();
+            EffectButtons effectButtons = FindObjectOfType<EffectButtons>();
+            effectButtons.EnableEffectButtons();
+            effectButtons.ToggleAllOff();
+            death.KillProjectile();
+            FindObjectOfType<GameManager>().CheckForLevelEnd();
+        }
+    }
+
+    void SelfDestruct()
+    {
+        activeProjectiles = GameObject.FindGameObjectsWithTag("Projectile");
+        foreach (GameObject proj in activeProjectiles)
+        {
+            ParticleSystem destructionEffect = GetComponentInChildren<ParticleSystem>();
+            destructionEffect.transform.position = proj.transform.position;
+            destructionEffect.Play();
+            GetComponent<AudioSource>().PlayOneShot(selfDestruction, 0.5f);
+            Destroy(proj);
+        }
     }
 
     public int GetEnergyCost()
@@ -315,19 +330,6 @@ public class GunController : MonoBehaviour
     public void EnableControls()
     {
         disabled = false;
-    }
-
-    void SelfDestruct()
-    {
-        activeProjectiles = GameObject.FindGameObjectsWithTag("Projectile");
-        foreach (GameObject proj in activeProjectiles)
-        {
-            ParticleSystem destructionEffect = GetComponentInChildren<ParticleSystem>();
-            destructionEffect.transform.position = proj.transform.position;
-            destructionEffect.Play();
-            GetComponent<AudioSource>().PlayOneShot(selfDestruction);
-            Destroy(proj);
-        }
     }
 
     public void SetTurnSensitivity(float newSensitivity)

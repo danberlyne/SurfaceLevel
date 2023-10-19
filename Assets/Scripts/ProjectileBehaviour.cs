@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ProjectileBehaviour : MonoBehaviour
@@ -9,9 +10,15 @@ public class ProjectileBehaviour : MonoBehaviour
     Rigidbody2D projectileRB;
     float gunAngle;
     float projectileSpeed;
-    ScoreKeeper scoreKeeper;
     GameManager gameManager;
     [SerializeField] float slowMotionMultiplier = 0.1f;
+
+    [Header("Scoring")]
+    ScoreKeeper scoreKeeper;
+    int multihitBonus = 0;
+    [SerializeField] GameObject scoreAmountThisHit;
+    [SerializeField] float scoreFlashDuration = 1f;
+    [SerializeField] Vector2 scoreFlashOffset = new Vector3 (0, 0.1f);
 
     void OnEnable()
     {
@@ -46,7 +53,11 @@ public class ProjectileBehaviour : MonoBehaviour
                 fragBehaviour.SetIsDestroyed();
                 FindObjectOfType<GunController>().RemoveCollider(other.collider);
                 Destroy(other.gameObject, destructionDelay);
+
                 scoreKeeper.UpdateScore();
+                multihitBonus = 1 << destroyedThisShot;
+                StartCoroutine(FlashScore(multihitBonus));
+
                 destroyedThisShot += 1;
                 gameManager.UpdateRemainingFragments();
 
@@ -56,6 +67,23 @@ public class ProjectileBehaviour : MonoBehaviour
                 }
             }
         }
+    }
+
+    IEnumerator FlashScore(int scoreThisHit)
+    {
+        RectTransform canvasRect = scoreAmountThisHit.transform.parent.GetComponent<RectTransform>();
+        Vector2 viewportPosition = Camera.main.WorldToViewportPoint(transform.position);
+        Vector2 projectileScreenPosition = new Vector2(
+            ((viewportPosition.x * canvasRect.sizeDelta.x) - (canvasRect.sizeDelta.x * 0.5f)),
+            ((viewportPosition.y * canvasRect.sizeDelta.y) - (canvasRect.sizeDelta.y * 0.5f)));
+
+        scoreAmountThisHit.GetComponent<RectTransform>().anchoredPosition = projectileScreenPosition + scoreFlashOffset;
+
+        scoreAmountThisHit.SetActive(true);
+        TextMeshProUGUI scoreTextThisHit = scoreAmountThisHit.GetComponent<TextMeshProUGUI>();
+        scoreTextThisHit.text = scoreThisHit.ToString();
+        yield return new WaitForSeconds(scoreFlashDuration);
+        scoreAmountThisHit.SetActive(false);
     }
 
     public int GetDestroyedThisShot()

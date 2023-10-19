@@ -21,7 +21,7 @@ public class MenuManager : MonoBehaviour
     {
         if (isSuccessScreen)
         {
-            FindObjectOfType<GameSession>().gameObject.SetActive(false);
+            FindObjectOfType<GameSession>().transform.GetChild(0).gameObject.SetActive(false);
             successTransform = successText.transform;
             InitialiseText();
             StartCoroutine(FadeIn(successFadeDuration));
@@ -94,6 +94,9 @@ public class MenuManager : MonoBehaviour
     IEnumerator LoadMainMenu()
     {
         yield return new WaitForSeconds(loadDelay);
+        GameSession gameSession = FindObjectOfType<GameSession>();
+        gameSession.ResetInstance();
+        Destroy(gameSession.gameObject);
         SceneManager.LoadScene(0);
     }
 

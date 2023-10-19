@@ -9,16 +9,18 @@ public class GameSession : MonoBehaviour
     bool saveQuit = false;
     int scoreAtLevelStart;
     ScoreKeeper scoreKeeper;
+    static GameSession instance;
 
     void Awake()
     {
-        int numGameSessions = FindObjectsOfType<GameSession>().Length;
-        if (numGameSessions > 1)
+        if (instance != null)
         {
+            gameObject.SetActive(false);
             Destroy(gameObject);
         }
         else
         {
+            instance = this;
             DontDestroyOnLoad(gameObject);
             scoreAtLevelStart = 0;
         }
@@ -38,5 +40,10 @@ public class GameSession : MonoBehaviour
     public int GetScoreAtLevelStart()
     {
         return scoreAtLevelStart;
+    }
+
+    public void ResetInstance()
+    {
+        instance = null;
     }
 }

@@ -16,6 +16,10 @@ public class DeathBehaviour : MonoBehaviour
             effectButtons.EnableEffectButtons();
             effectButtons.ToggleAllOff();
             KillProjectile();
+            ParticleSystem destructionEffect = GetComponentInChildren<ParticleSystem>();
+            destructionEffect.transform.position = projectile.transform.position;
+            destructionEffect.Play();
+            GetComponent<AudioSource>().Play();
         }
         FindObjectOfType<GameManager>().CheckForLevelEnd();
     }
