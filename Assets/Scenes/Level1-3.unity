@@ -4908,6 +4908,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1176826239}
     - target: {fileID: 4604642858789144129, guid: 36d27b746d7b8cf4a891d5d5030bdab8, type: 3}
+      propertyPath: gunController
+      value: 
+      objectReference: {fileID: 5886052306246568320}
+    - target: {fileID: 4604642858789144129, guid: 36d27b746d7b8cf4a891d5d5030bdab8, type: 3}
       propertyPath: overlayCanvas
       value: 
       objectReference: {fileID: 1635642109}
@@ -5337,11 +5341,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8937503822043002075, guid: dbd3bdea8b2fe0649b244215d23aa4b3, type: 3}
+      propertyPath: pauseMenuCanvas
+      value: 
+      objectReference: {fileID: 6981968546708888485}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dbd3bdea8b2fe0649b244215d23aa4b3, type: 3}
+--- !u!114 &5886052306246568320 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8937503822043002075, guid: dbd3bdea8b2fe0649b244215d23aa4b3, type: 3}
+  m_PrefabInstance: {fileID: 5886052306246568319}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e3ab996ac63608f418f3677978ca05e2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &6614011094401586618 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6614011093492105830, guid: 06aa214a2251ac84e9b1046d5fd7f6af, type: 3}
@@ -5382,7 +5401,7 @@ PrefabInstance:
     - target: {fileID: 2699514647570009855, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 2933728535182512111}
+      objectReference: {fileID: 5886052306246568320}
     - target: {fileID: 2699514647570009855, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
@@ -5397,7 +5416,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2699514647570009855, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: Unpause
+      value: UnpauseGame
       objectReference: {fileID: 0}
     - target: {fileID: 2699514647570009855, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
@@ -5406,6 +5425,10 @@ PrefabInstance:
     - target: {fileID: 2699514647570009855, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: MenuManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2699514647570009855, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: GunController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 2699514647570009855, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
@@ -5526,7 +5549,7 @@ PrefabInstance:
     - target: {fileID: 3565972023842160428, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
-      objectReference: {fileID: 2933728535182512111}
+      objectReference: {fileID: 5886052306246568320}
     - target: {fileID: 3565972023842160428, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
@@ -5541,7 +5564,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3565972023842160428, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: Unpause
+      value: UnpauseGame
       objectReference: {fileID: 0}
     - target: {fileID: 3565972023842160428, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
@@ -5553,7 +5576,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3565972023842160428, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: GameManager, Assembly-CSharp
+      value: GunController, Assembly-CSharp
       objectReference: {fileID: 0}
     - target: {fileID: 3565972023842160428, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
@@ -5578,10 +5601,14 @@ PrefabInstance:
     - target: {fileID: 3830348315175055865, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 2933728535182512111}
+      objectReference: {fileID: 5886052306246568320}
     - target: {fileID: 3830348315175055865, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: Unpause
+      value: UnpauseGame
+      objectReference: {fileID: 0}
+    - target: {fileID: 3830348315175055865, guid: 14221159e7ee73746aab34ecbe762161, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: GunController, Assembly-CSharp
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

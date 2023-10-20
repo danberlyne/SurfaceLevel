@@ -24,7 +24,7 @@
                     "initialStateCheck": false
                 },
                 {
-                    "name": "Pause",
+                    "name": "PauseGame",
                     "type": "Button",
                     "id": "d37c885c-b1b3-4b94-bb1e-04b11ce5bf9c",
                     "expectedControlType": "Button",
@@ -68,22 +68,22 @@
                 {
                     "name": "",
                     "id": "cea656a7-80d9-42c3-8940-b41229647d26",
-                    "path": "<Keyboard>/escape",
+                    "path": "<Keyboard>/p",
                     "interactions": "",
                     "processors": "",
                     "groups": "Keyboard&Mouse",
-                    "action": "Pause",
+                    "action": "PauseGame",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
                 {
                     "name": "",
-                    "id": "4633e055-a17c-4739-9d8a-40a8d9f9a5fc",
-                    "path": "<Keyboard>/p",
+                    "id": "d86bd772-616f-4061-8d37-c703d5b5c7a8",
+                    "path": "",
                     "interactions": "",
                     "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "Pause",
+                    "groups": "",
+                    "action": "PauseGame",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

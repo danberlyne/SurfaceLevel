@@ -16,6 +16,7 @@ where (v1, v2, v3) is the rotation axis as a vector and theta is the rotation an
 public class GunController : MonoBehaviour
 {
     [Header("General")]
+    [SerializeField] GameObject pauseMenuCanvas;
     [SerializeField] float startDelay = 4.0f;
     bool disabled = false;
     Vector2 turnInput;
@@ -315,6 +316,32 @@ public class GunController : MonoBehaviour
             GetComponent<AudioSource>().PlayOneShot(selfDestruction, 0.5f);
             Destroy(proj);
         }
+    }
+
+    void OnPauseGame(InputValue value)
+    {
+        if (value.isPressed && !pauseMenuCanvas.activeInHierarchy)
+        {
+            PauseGame();
+        }
+        else if (value.isPressed && pauseMenuCanvas.activeInHierarchy)
+        {
+            UnpauseGame();
+        }
+    }
+
+    public void PauseGame()
+    {
+        pauseMenuCanvas.SetActive(true);
+        DisableControls();
+        Time.timeScale = 0f;
+    }
+
+    public void UnpauseGame()
+    {
+        pauseMenuCanvas.SetActive(false);
+        EnableControls();
+        Time.timeScale = 1f;
     }
 
     public int GetEnergyCost()

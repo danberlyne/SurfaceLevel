@@ -9,12 +9,12 @@ using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
-    GunController gunController;
+    [SerializeField] GunController gunController;
     int remainingFragments;
 
     [Header("UI")]
     [SerializeField] GameObject overlayCanvas;
-    [SerializeField] GameObject pauseMenuCanvas;
+    // [SerializeField] GameObject pauseMenuCanvas;
     [SerializeField] GameObject effectsCanvas;
 
     [Header("Startup")]
@@ -36,7 +36,6 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        gunController = FindObjectOfType<GunController>();
         remainingFragments = GameObject.FindGameObjectsWithTag("Fragment").Length;
         effectButtons.DisableInactiveEffectButtons();
         StartCoroutine(StartUp());
@@ -60,7 +59,10 @@ public class GameManager : MonoBehaviour
         string currentSceneName = SceneManager.GetActiveScene().name;
         if (currentSceneName == "Level1-1")
         {
-            overlayCanvas.SetActive(true);
+            if (overlayCanvas)
+            {
+                overlayCanvas.SetActive(true);
+            }
             effectsCanvas.SetActive(true);
         }
     }
@@ -140,7 +142,6 @@ public class GameManager : MonoBehaviour
         FindObjectOfType<GameSession>().UpdateScoreAtLevelStart();
         FindObjectOfType<SliderController>().ResetEnergy();
         FindObjectOfType<ScoreKeeper>().UpdateLevel();
-        EffectButtons effectButtons = FindObjectOfType<EffectButtons>();
         effectButtons.EnableEffectButtons();
         effectButtons.ToggleAllOff();
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -153,37 +154,10 @@ public class GameManager : MonoBehaviour
     {
         FindObjectOfType<SliderController>().ResetEnergy();
         FindObjectOfType<ScoreKeeper>().RollbackScore();
-        EffectButtons effectButtons = FindObjectOfType<EffectButtons>();
         effectButtons.EnableEffectButtons();
         effectButtons.ToggleAllOff();
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(currentSceneIndex);
-    }
-
-    void OnPause(InputValue value)
-    {
-        if (value.isPressed && !pauseMenuCanvas.activeInHierarchy)
-        {
-            Pause();
-        }
-        else if (value.isPressed && pauseMenuCanvas.activeInHierarchy)
-        {
-            Unpause();
-        }
-    }
-
-    public void Pause()
-    {
-        pauseMenuCanvas.SetActive(true);
-        gunController.DisableControls();
-        Time.timeScale = 0f;
-    }
-
-    public void Unpause()
-    {
-        pauseMenuCanvas.SetActive(false);
-        gunController.EnableControls();
-        Time.timeScale = 1f;
     }
 
     public void UpdateRemainingFragments()

@@ -36,8 +36,7 @@ public class SettingsManager : MonoBehaviour
     void Awake()
     {
         LoadSettings();
-        SaveSettings(); // Stores default bindings in PlayerPrefs if no prefs have been set. 
-                        // Required so that UpdateBindings() does not erase bindings when booting up game for first time.
+
         UpdateBackgroundVolume();
         UpdateSFXVolume();
         UpdateBindings();
@@ -77,8 +76,8 @@ public class SettingsManager : MonoBehaviour
         PlayerPrefs.SetString("Fire 2", GetPath("Fire", 1));
         PlayerPrefs.SetString("Kill 1", GetPath("Kill", 0));
         PlayerPrefs.SetString("Kill 2", GetPath("Kill", 1));
-        PlayerPrefs.SetString("Pause 1", GetPath("Pause", 0));
-        PlayerPrefs.SetString("Pause 2", GetPath("Pause", 1));
+        PlayerPrefs.SetString("Pause 1", GetPath("PauseGame", 0));
+        PlayerPrefs.SetString("Pause 2", GetPath("PauseGame", 1));
         PlayerPrefs.Save();
     }
 
@@ -95,12 +94,12 @@ public class SettingsManager : MonoBehaviour
         settingsSliders[1].value = PlayerPrefs.GetFloat("SFX Volume", defaultSliderValue);
         turnSensitivityValue = minTurnSensitivity + PlayerPrefs.GetFloat("Turn Sensitivity", defaultSliderValue) * sensitivityRange;
         settingsSliders[2].value = PlayerPrefs.GetFloat("Turn Sensitivity", defaultSliderValue);
-        fire1.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Fire 1", "<Keyboard>/Space"));
-        fire2.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Fire 2"));
-        kill1.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Kill 1", "<Keyboard>/K"));
-        kill2.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Kill 2"));
-        pause1.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Pause 1", "<Keyboard>/Escape"));
-        pause2.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Pause 2", "<Keyboard>/P"));
+        fire1.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Fire 1", defaultPaths[0]));
+        fire2.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Fire 2", defaultPaths[1]));
+        kill1.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Kill 1", defaultPaths[2]));
+        kill2.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Kill 2", defaultPaths[3]));
+        pause1.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Pause 1", defaultPaths[4]));
+        pause2.GetComponent<TextMeshProUGUI>().text = BindingPathToString(PlayerPrefs.GetString("Pause 2", defaultPaths[5]));
     }
 
     string BindingPathToString(string bindingPath)
@@ -133,8 +132,8 @@ public class SettingsManager : MonoBehaviour
         InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Fire"], 1, defaultPaths[1]);
         InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Kill"], 0, defaultPaths[2]);
         InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Kill"], 1, defaultPaths[3]);
-        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Pause"], 0, defaultPaths[4]);
-        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Pause"], 1, defaultPaths[5]);
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["PauseGame"], 0, defaultPaths[4]);
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["PauseGame"], 1, defaultPaths[5]);
     }
 
     public void UpdateBackgroundVolume()
@@ -191,11 +190,11 @@ public class SettingsManager : MonoBehaviour
 
     public void UpdateBindings()
     {
-        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Fire"], 0, PlayerPrefs.GetString("Fire 1"));
-        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Fire"], 1, PlayerPrefs.GetString("Fire 2"));
-        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Kill"], 0, PlayerPrefs.GetString("Kill 1"));
-        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Kill"], 1, PlayerPrefs.GetString("Kill 2"));
-        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Pause"], 0, PlayerPrefs.GetString("Pause 1"));
-        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Pause"], 1, PlayerPrefs.GetString("Pause 2"));
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Fire"], 0, PlayerPrefs.GetString("Fire 1", defaultPaths[0]));
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Fire"], 1, PlayerPrefs.GetString("Fire 2", defaultPaths[1]));
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Kill"], 0, PlayerPrefs.GetString("Kill 1", defaultPaths[2]));
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["Kill"], 1, PlayerPrefs.GetString("Kill 2", defaultPaths[3]));
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["PauseGame"], 0, PlayerPrefs.GetString("Pause 1", defaultPaths[4]));
+        InputActionRebindingExtensions.ApplyBindingOverride(inputActionAsset["PauseGame"], 1, PlayerPrefs.GetString("Pause 2", defaultPaths[5]));
     }
 }

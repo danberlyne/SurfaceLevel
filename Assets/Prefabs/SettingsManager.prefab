@@ -824,8 +824,8 @@ MonoBehaviour:
   - 
   - <Keyboard>/K
   - 
-  - <Keyboard>/Escape
   - <Keyboard>/P
+  - 
   backgroundVolume: {fileID: 1313633997425201212}
   sfxVolume: {fileID: 4229753167102056501}
   turnSensitivity: {fileID: 4829258988940648704}
@@ -2414,7 +2414,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8308981225906967518, guid: 4453e45765927444fa1b8572eeb1e6c3, type: 3}
       propertyPath: m_SortingOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2714,7 +2714,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3810526567130705986, guid: f0664a2c5571208489260286991e6ed0, type: 3}
       propertyPath: m_SortingOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 4012047907270481103, guid: f0664a2c5571208489260286991e6ed0, type: 3}
       propertyPath: m_AnchoredPosition.y
