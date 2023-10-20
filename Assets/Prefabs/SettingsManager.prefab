@@ -830,7 +830,7 @@ MonoBehaviour:
   sfxVolume: {fileID: 4229753167102056501}
   turnSensitivity: {fileID: 4829258988940648704}
   minTurnSensitivity: 20
-  sensitivityRange: 0.5
+  sensitivityRange: 0.2
   inputActionAsset: {fileID: -944628639613478452, guid: 90f2295e43754ce4caf00d27039a4943, type: 3}
   fire1: {fileID: 5101131463499502838}
   fire2: {fileID: 5953358210632241099}

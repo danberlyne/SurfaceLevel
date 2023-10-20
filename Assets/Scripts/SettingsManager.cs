@@ -21,8 +21,8 @@ public class SettingsManager : MonoBehaviour
     [Header("Controls Settings")]
     [SerializeField] GameObject turnSensitivity;
     float turnSensitivityValue;
-    [SerializeField] float minTurnSensitivity = 50f;
-    [SerializeField] float sensitivityRange = 1f;
+    [SerializeField] float minTurnSensitivity = 20f;
+    [SerializeField] float sensitivityRange = 0.2f;
     [Header("Key Bindings")]
     [SerializeField] InputActionAsset inputActionAsset;
     [SerializeField] GameObject fire1;
@@ -36,7 +36,8 @@ public class SettingsManager : MonoBehaviour
     void Awake()
     {
         LoadSettings();
-
+        SaveSettings(); // Stores default bindings in PlayerPrefs if no prefs have been set. 
+                        // Required so that UpdateBindings() does not erase bindings when booting up game for first time.
         UpdateBackgroundVolume();
         UpdateSFXVolume();
         UpdateBindings();
