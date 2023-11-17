@@ -20,8 +20,5 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Congratulations.unity
     guid: 85708a64e46979743be85c0b5d7a66d9
-  - enabled: 0
-    path: Assets/Scenes/LevelTemplate.unity
-    guid: fd877bc19fd93d140950114a94f98c7f
   m_configObjects:
     com.unity.input.settings: {fileID: 11400000, guid: 73eb0504c83b6ae4b8b1953bdcb2714f, type: 2}

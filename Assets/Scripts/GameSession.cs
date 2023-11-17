@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -22,7 +23,7 @@ public class GameSession : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
-            scoreAtLevelStart = 0;
+            scoreAtLevelStart = FindObjectOfType<JSONReader>().GetCurrentScore();
         }
     }
 
@@ -45,5 +46,14 @@ public class GameSession : MonoBehaviour
     public void ResetInstance()
     {
         instance = null;
+    }
+
+    public Tuple<int, int> GetCurrentLevel()
+    {
+        string sceneName = SceneManager.GetActiveScene().name;
+        int l = sceneName.Length;
+        int stage = (int)sceneName[l - 3];
+        int level = (int)sceneName[l - 1];
+        return new Tuple<int, int>(stage, level);
     }
 }

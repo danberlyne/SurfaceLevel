@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -15,17 +16,32 @@ public class MenuManager : MonoBehaviour
     [SerializeField] GameObject successText;
     [SerializeField] float successFadeDuration = 3f;
     Transform successTransform;
+    SaveManager saveManager;
+    JSONReader reader;
+    GameSession gameSession;
+    [SerializeField] GameObject continueButton;
 
+
+    void Awake()
+    {
+        saveManager = FindObjectOfType<SaveManager>();
+        reader = FindObjectOfType<JSONReader>();
+        gameSession = FindObjectOfType<GameSession>();
+    }
 
     void Start()
     {
         if (isSuccessScreen)
         {
-            FindObjectOfType<GameSession>().transform.GetChild(0).gameObject.SetActive(false);
+            gameSession.transform.GetChild(0).gameObject.SetActive(false);
             successTransform = successText.transform;
             InitialiseText();
             StartCoroutine(FadeIn(successFadeDuration));
             StartCoroutine(EnableButtons());
+        }
+        else if (SceneManager.GetActiveScene().buildIndex == 0 && reader.GetCurrentLevel().Item1 == 1 && reader.GetCurrentLevel().Item2 == 1)
+        {
+            continueButton.SetActive(false);
         }
     }
 
@@ -75,6 +91,9 @@ public class MenuManager : MonoBehaviour
 
     public void StartNewGame()
     {
+        saveManager.SetCurrentScore(0);
+        saveManager.SetCurrentLevel(new Tuple<int, int>(1, 1));
+        saveManager.SaveToJson();
         StartCoroutine(LoadFirstLevel());
     }
 
@@ -86,9 +105,31 @@ public class MenuManager : MonoBehaviour
         SceneManager.LoadScene(nextSceneIndex);
     }
 
+    public void ContinueGame()
+    {
+        saveManager.LoadCurrentGame();
+    }
+
     public void QuitGame()
     {
+        SaveCurrentGame();
+        SaveProgress();
         StartCoroutine(LoadMainMenu());
+    }
+
+    void SaveCurrentGame()
+    {
+        Tuple<int, int> currentLevel = gameSession.GetCurrentLevel();
+        saveManager.SetCurrentScore(gameSession.GetScoreAtLevelStart());
+        saveManager.SetCurrentLevel(currentLevel);
+        saveManager.SaveToJson();
+    }
+
+    void SaveProgress()
+    {
+        Tuple<int, int> currentLevel = gameSession.GetCurrentLevel();
+        saveManager.UpdateLevelProgression(currentLevel);
+        saveManager.SaveToJson();
     }
 
     IEnumerator LoadMainMenu()
