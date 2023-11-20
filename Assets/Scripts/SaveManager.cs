@@ -3,8 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.SceneManagement;
+using Newtonsoft.Json;
 
 public class SaveManager : MonoBehaviour
 {
@@ -23,32 +23,24 @@ public class SaveManager : MonoBehaviour
         reader = GetComponent<JSONReader>();
     }
 
-    public void InitialiseDefaults()
-    {
-        defaultGameData.currentLevel = new Tuple<int, int>(1, 1);
-        defaultGameData.scoreAtLevelStart = 0;
-        defaultProgressionData.levelProgression = new Tuple<int, int>(1, 1);
-        defaultScoreData.overallHighScores = new List<int>() { 0, 0, 0 };
-        defaultScoreData.levelHighScores = new Dictionary<Tuple<int, int>, Tuple<int, string>>();
-        for (int i = firstLevelBuildIndex; i < SceneManager.sceneCountInBuildSettings - 1; i++)
-        {
-            string pathToScene = SceneUtility.GetScenePathByBuildIndex(i);
-            string sceneName = Path.GetFileNameWithoutExtension(pathToScene);
-            int l = sceneName.Length;
-            int stage = (int) sceneName[l-3];
-            int level = (int) sceneName[l-1];
-            defaultScoreData.levelHighScores.Add(new Tuple<int, int>(stage, level), new Tuple<int, string>(0, "-"));
-        }
-    }
-
     public void SaveToJson()
     {
-        string gameData = JsonUtility.ToJson(_GameData);
-        string progressionData = JsonUtility.ToJson(_ProgressionData);
-        string scoreData = JsonUtility.ToJson(_ScoreData);
-        File.WriteAllText(Application.persistentDataPath + "/CurrentGameData.json", gameData);
-        File.WriteAllText(Application.persistentDataPath + "/ProgressionData.json", progressionData);
-        File.WriteAllText(Application.persistentDataPath + "/HighScoreData.json", scoreData);
+        string gameDataString = JsonConvert.SerializeObject(_GameData);
+        string progressionDataString = JsonConvert.SerializeObject(_ProgressionData);
+        string scoreDataString = JsonConvert.SerializeObject(_ScoreData);
+        File.WriteAllText(Application.persistentDataPath + "/CurrentGameData.json", gameDataString);
+        File.WriteAllText(Application.persistentDataPath + "/ProgressionData.json", progressionDataString);
+        File.WriteAllText(Application.persistentDataPath + "/HighScoreData.json", scoreDataString);
+    }
+
+    public void SaveToJson(CurrentGameData gameData, ProgressionData progressionData, HighScoreData scoreData)
+    {
+        string gameDataString = JsonConvert.SerializeObject(gameData);
+        string progressionDataString = JsonConvert.SerializeObject(progressionData);
+        string scoreDataString = JsonConvert.SerializeObject(scoreData);
+        File.WriteAllText(Application.persistentDataPath + "/CurrentGameData.json", gameDataString);
+        File.WriteAllText(Application.persistentDataPath + "/ProgressionData.json", progressionDataString);
+        File.WriteAllText(Application.persistentDataPath + "/HighScoreData.json", scoreDataString);
     }
 
     public void LoadCurrentGame()
@@ -87,16 +79,30 @@ public class SaveManager : MonoBehaviour
 
     public CurrentGameData GetDefaultGameData()
     {
+        defaultGameData.currentLevel = new Tuple<int, int>(1, 1);
+        defaultGameData.scoreAtLevelStart = 0;
         return defaultGameData;
     }
 
     public ProgressionData GetDefaultProgressionData()
     {
+        defaultProgressionData.levelProgression = new Tuple<int, int>(1, 1);
         return defaultProgressionData;
     }
 
     public HighScoreData GetDefaultScoreData()
     {
+        defaultScoreData.overallHighScores = new List<int>() { 0, 0, 0 };
+        defaultScoreData.levelHighScores = new Dictionary<Tuple<int, int>, Tuple<int, string>>();
+        for (int i = firstLevelBuildIndex; i < SceneManager.sceneCountInBuildSettings - 1; i++)
+        {
+            string pathToScene = SceneUtility.GetScenePathByBuildIndex(i);
+            string sceneName = Path.GetFileNameWithoutExtension(pathToScene);
+            int l = sceneName.Length;
+            int stage = (int)sceneName[l - 3];
+            int level = (int)sceneName[l - 1];
+            defaultScoreData.levelHighScores.Add(new Tuple<int, int>(stage, level), new Tuple<int, string>(0, "-"));
+        }
         return defaultScoreData;
     }
 }

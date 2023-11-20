@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
-using UnityEngine.SceneManagement;
+using Newtonsoft.Json;
 
 public class JSONReader : MonoBehaviour
 {
@@ -17,7 +17,6 @@ public class JSONReader : MonoBehaviour
     void Awake()
     {
         saveManager = GetComponent<SaveManager>();
-        saveManager.InitialiseDefaults();
 
         string gameDataPath = Application.persistentDataPath + "/CurrentGameData.json";
         string progressionDataPath = Application.persistentDataPath + "/ProgressionData.json";
@@ -27,18 +26,19 @@ public class JSONReader : MonoBehaviour
         progressionDataJSON = (File.Exists(progressionDataPath)) ? File.ReadAllText(progressionDataPath) : null;
         scoreDataJSON = (File.Exists(scoreDataPath)) ? File.ReadAllText(scoreDataPath) : null;
 
-        CurrentGameData gameDataInJson = (File.Exists(gameDataPath)) ? JsonUtility.FromJson<CurrentGameData>(gameDataJSON) : saveManager.GetDefaultGameData();
-        ProgressionData progressionDataInJson = (File.Exists(progressionDataPath)) ? JsonUtility.FromJson<ProgressionData>(progressionDataJSON) : saveManager.GetDefaultProgressionData();
-        HighScoreData scoreDataInJson = (File.Exists(scoreDataPath)) ? JsonUtility.FromJson<HighScoreData>(scoreDataJSON) : saveManager.GetDefaultScoreData();
+        CurrentGameData gameDataInJson = (File.Exists(gameDataPath)) ? JsonConvert.DeserializeObject<CurrentGameData>(gameDataJSON) : saveManager.GetDefaultGameData();
+        ProgressionData progressionDataInJson = (File.Exists(progressionDataPath)) ? JsonConvert.DeserializeObject<ProgressionData>(progressionDataJSON) : saveManager.GetDefaultProgressionData();
+        HighScoreData scoreDataInJson = (File.Exists(scoreDataPath)) ? JsonConvert.DeserializeObject<HighScoreData>(scoreDataJSON) : saveManager.GetDefaultScoreData();
 
         currentLevel = gameDataInJson.currentLevel;
-        Debug.Log(GetCurrentLevel().Item1);
         currentScore = gameDataInJson.scoreAtLevelStart;
 
         levelProgression = progressionDataInJson.levelProgression;
 
         overallHighScores = scoreDataInJson.overallHighScores;
         levelHighScores = scoreDataInJson.levelHighScores;
+
+        saveManager.SaveToJson(gameDataInJson, progressionDataInJson, scoreDataInJson);
     }
 
     public Tuple<int, int> GetCurrentLevel() 
