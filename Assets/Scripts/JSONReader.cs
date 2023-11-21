@@ -7,11 +7,11 @@ using Newtonsoft.Json;
 public class JSONReader : MonoBehaviour
 {
     string gameDataJSON, progressionDataJSON, scoreDataJSON;
-    Tuple<int, int> currentLevel;
+    (int, int) currentLevel;
     int currentScore;
-    Tuple<int, int> levelProgression;
+    (int, int) levelProgression;
     List<int> overallHighScores;
-    Dictionary<Tuple<int, int>, Tuple<int, string>> levelHighScores;
+    Dictionary<(int, int), (int, string)> levelHighScores;
     SaveManager saveManager;
 
     void Awake()
@@ -41,7 +41,7 @@ public class JSONReader : MonoBehaviour
         saveManager.SaveToJson(gameDataInJson, progressionDataInJson, scoreDataInJson);
     }
 
-    public Tuple<int, int> GetCurrentLevel() 
+    public (int, int) GetCurrentLevel() 
     { 
         return currentLevel; 
     }
@@ -49,7 +49,7 @@ public class JSONReader : MonoBehaviour
     { 
         return currentScore; 
     }
-    public Tuple<int, int> GetLevelProgression() 
+    public (int, int) GetLevelProgression() 
     { 
         return levelProgression; 
     }
@@ -57,7 +57,7 @@ public class JSONReader : MonoBehaviour
     { 
         return overallHighScores; 
     }
-    public Dictionary<Tuple<int, int>, Tuple<int, string>> GetLevelHighScores() 
+    public Dictionary<(int, int), (int, string)> GetLevelHighScores() 
     { 
         return levelHighScores; 
     }

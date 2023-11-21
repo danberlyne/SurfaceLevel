@@ -60,12 +60,12 @@ public class SaveManager : MonoBehaviour
         _GameData.scoreAtLevelStart = score;
     }
 
-    public void SetCurrentLevel(Tuple<int, int> level)
+    public void SetCurrentLevel((int, int) level)
     {
         _GameData.currentLevel = level;
     }
 
-    public void UpdateLevelProgression(Tuple<int, int> level)
+    public void UpdateLevelProgression((int, int) level)
     {
         if (level.Item1 > _ProgressionData.levelProgression.Item1)
         {
@@ -79,29 +79,29 @@ public class SaveManager : MonoBehaviour
 
     public CurrentGameData GetDefaultGameData()
     {
-        defaultGameData.currentLevel = new Tuple<int, int>(1, 1);
+        defaultGameData.currentLevel = (1, 1);
         defaultGameData.scoreAtLevelStart = 0;
         return defaultGameData;
     }
 
     public ProgressionData GetDefaultProgressionData()
     {
-        defaultProgressionData.levelProgression = new Tuple<int, int>(1, 1);
+        defaultProgressionData.levelProgression = (1, 1);
         return defaultProgressionData;
     }
 
     public HighScoreData GetDefaultScoreData()
     {
         defaultScoreData.overallHighScores = new List<int>() { 0, 0, 0 };
-        defaultScoreData.levelHighScores = new Dictionary<Tuple<int, int>, Tuple<int, string>>();
+        defaultScoreData.levelHighScores = new Dictionary<(int, int), (int, string)>();
         for (int i = firstLevelBuildIndex; i < SceneManager.sceneCountInBuildSettings - 1; i++)
         {
             string pathToScene = SceneUtility.GetScenePathByBuildIndex(i);
             string sceneName = Path.GetFileNameWithoutExtension(pathToScene);
             int l = sceneName.Length;
-            int stage = (int)sceneName[l - 3];
-            int level = (int)sceneName[l - 1];
-            defaultScoreData.levelHighScores.Add(new Tuple<int, int>(stage, level), new Tuple<int, string>(0, "-"));
+            int stage = Int32.Parse(sceneName[l - 3].ToString());
+            int level = Int32.Parse(sceneName[l - 1].ToString());
+            defaultScoreData.levelHighScores.Add((stage, level), (0, "-"));
         }
         return defaultScoreData;
     }
@@ -115,14 +115,14 @@ Need to know the score the player had at the start of the level.
 [System.Serializable]
 public class CurrentGameData
 {
-    public Tuple<int, int> currentLevel; 
+    public (int, int) currentLevel; 
     public int scoreAtLevelStart;
 }
 
 [System.Serializable]
 public class ProgressionData
 {
-    public Tuple<int, int> levelProgression; // Highest stage and level completed.
+    public (int, int) levelProgression; // Highest stage and level completed.
 }
 
 [System.Serializable]
@@ -131,5 +131,5 @@ public class HighScoreData
     // List of top 3 overall scores.
     public List<int> overallHighScores = new List<int>();
     // Keys are stage-level tuples, values are score-rank tuples.
-    public Dictionary<Tuple<int, int>, Tuple<int, string>> levelHighScores = new Dictionary<Tuple<int, int>, Tuple<int, string>>();
+    public Dictionary<(int, int), (int, string)> levelHighScores = new Dictionary<(int, int), (int, string)>();
 }

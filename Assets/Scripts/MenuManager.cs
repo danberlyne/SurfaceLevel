@@ -92,7 +92,7 @@ public class MenuManager : MonoBehaviour
     public void StartNewGame()
     {
         saveManager.SetCurrentScore(0);
-        saveManager.SetCurrentLevel(new Tuple<int, int>(1, 1));
+        saveManager.SetCurrentLevel((1, 1));
         saveManager.SaveToJson();
         StartCoroutine(LoadFirstLevel());
     }
@@ -119,7 +119,7 @@ public class MenuManager : MonoBehaviour
 
     void SaveCurrentGame()
     {
-        Tuple<int, int> currentLevel = gameSession.GetCurrentLevel();
+        (int, int) currentLevel = gameSession.GetCurrentLevel();
         saveManager.SetCurrentScore(gameSession.GetScoreAtLevelStart());
         saveManager.SetCurrentLevel(currentLevel);
         saveManager.SaveToJson();
@@ -127,7 +127,7 @@ public class MenuManager : MonoBehaviour
 
     void SaveProgress()
     {
-        Tuple<int, int> currentLevel = gameSession.GetCurrentLevel();
+        (int, int) currentLevel = gameSession.GetCurrentLevel();
         saveManager.UpdateLevelProgression(currentLevel);
         saveManager.SaveToJson();
     }

@@ -48,12 +48,12 @@ public class GameSession : MonoBehaviour
         instance = null;
     }
 
-    public Tuple<int, int> GetCurrentLevel()
+    public (int, int) GetCurrentLevel()
     {
         string sceneName = SceneManager.GetActiveScene().name;
         int l = sceneName.Length;
         int stage = (int)sceneName[l - 3];
         int level = (int)sceneName[l - 1];
-        return new Tuple<int, int>(stage, level);
+        return (stage, level);
     }
 }
