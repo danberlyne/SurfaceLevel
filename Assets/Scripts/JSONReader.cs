@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
 using Newtonsoft.Json;
+using System.Collections;
+using System.ComponentModel;
 
 public class JSONReader : MonoBehaviour
 {
@@ -25,6 +27,9 @@ public class JSONReader : MonoBehaviour
         gameDataJSON = (File.Exists(gameDataPath)) ? File.ReadAllText(gameDataPath) : null;
         progressionDataJSON = (File.Exists(progressionDataPath)) ? File.ReadAllText(progressionDataPath) : null;
         scoreDataJSON = (File.Exists(scoreDataPath)) ? File.ReadAllText(scoreDataPath) : null;
+
+        // Allows proper deserialisation of tuples as dictionary keys.
+        TypeDescriptor.AddAttributes(typeof((int, int)), new TypeConverterAttribute(typeof(TupleConverter<int, int>)));
 
         CurrentGameData gameDataInJson = (File.Exists(gameDataPath)) ? JsonConvert.DeserializeObject<CurrentGameData>(gameDataJSON) : saveManager.GetDefaultGameData();
         ProgressionData progressionDataInJson = (File.Exists(progressionDataPath)) ? JsonConvert.DeserializeObject<ProgressionData>(progressionDataJSON) : saveManager.GetDefaultProgressionData();

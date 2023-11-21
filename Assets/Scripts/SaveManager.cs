@@ -113,6 +113,7 @@ Need to know the stage and level to determine the scene to load.
 Need to know the score the player had at the start of the level.
 */
 [System.Serializable]
+[JsonObject]
 public class CurrentGameData
 {
     public (int, int) currentLevel; 
@@ -120,12 +121,14 @@ public class CurrentGameData
 }
 
 [System.Serializable]
+[JsonObject]
 public class ProgressionData
 {
     public (int, int) levelProgression; // Highest stage and level completed.
 }
 
 [System.Serializable]
+[JsonObject]
 public class HighScoreData
 {
     // List of top 3 overall scores.
