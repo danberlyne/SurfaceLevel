@@ -58,6 +58,12 @@ public class ScoreKeeper : MonoBehaviour
         return score;
     }
 
+    public void SetScore(int newScore)
+    {
+        TextMeshProUGUI scoreText = scoreAmount.GetComponent<TextMeshProUGUI>();
+        scoreText.text = newScore.ToString();
+    }
+
     public void AddBonus()
     {
         SliderController sliderController = FindObjectOfType<SliderController>();

@@ -50,9 +50,17 @@ public class JSONReader : MonoBehaviour
     { 
         return currentLevel; 
     }
+    public void SetCurrentLevel((int, int) level)
+    {
+        currentLevel = level;
+    }
     public int GetCurrentScore() 
     { 
         return currentScore; 
+    }
+    public void SetCurrentScore(int score)
+    {
+        currentScore = score;
     }
     public (int, int) GetLevelProgression() 
     { 

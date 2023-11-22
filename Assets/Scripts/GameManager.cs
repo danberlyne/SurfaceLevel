@@ -1,5 +1,7 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -139,15 +141,39 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(loadDelay);
         // Go to Success screen, calculate bonus, then prompt to go to next level or save and quit. If we reached the last level, go to Congratulations screen and show high scores.
-        FindObjectOfType<GameSession>().UpdateScoreAtLevelStart();
+        GameSession gameSession = FindObjectOfType<GameSession>();
+        gameSession.UpdateScoreAtLevelStart();
         FindObjectOfType<SliderController>().ResetEnergy();
         FindObjectOfType<ScoreKeeper>().UpdateLevel();
+        SaveGameData(gameSession);
+
         effectButtons.EnableEffectButtons();
         effectButtons.ToggleAllOff();
+
         int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
         int nextSceneIndex = currentSceneIndex + 1;
         Time.timeScale = 1.0f;
         SceneManager.LoadScene(nextSceneIndex);
+    }
+
+    void SaveGameData(GameSession session)
+    {
+        SaveManager saveManager = FindObjectOfType<SaveManager>();
+        JSONReader reader = FindObjectOfType<JSONReader>();
+        saveManager.SetCurrentScore(session.GetScoreAtLevelStart());
+        reader.SetCurrentScore(session.GetScoreAtLevelStart());
+        int currentSceneIndex = SceneManager.GetActiveScene().buildIndex;
+        string pathToNextScene = SceneUtility.GetScenePathByBuildIndex(currentSceneIndex + 1);
+        string nextSceneName = Path.GetFileNameWithoutExtension(pathToNextScene);
+        if (nextSceneName[..5] == "Level")
+        {
+            int l = nextSceneName.Length;
+            int stage = Int32.Parse(nextSceneName[l - 3].ToString());
+            int level = Int32.Parse(nextSceneName[l - 1].ToString());
+            saveManager.SetCurrentLevel((stage, level));
+            reader.SetCurrentLevel((stage, level));
+        }
+        saveManager.SaveToJson();
     }
 
     public void RestartLevel()
