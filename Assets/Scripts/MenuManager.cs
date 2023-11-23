@@ -19,6 +19,7 @@ public class MenuManager : MonoBehaviour
     SaveManager saveManager;
     JSONReader reader;
     GameSession gameSession;
+    ScoreKeeper scoreKeeper;
     [SerializeField] GameObject continueButton;
 
 
@@ -27,6 +28,7 @@ public class MenuManager : MonoBehaviour
         saveManager = FindObjectOfType<SaveManager>();
         reader = FindObjectOfType<JSONReader>();
         gameSession = FindObjectOfType<GameSession>();
+        scoreKeeper = FindObjectOfType<ScoreKeeper>();
     }
 
     void Start()
@@ -112,8 +114,19 @@ public class MenuManager : MonoBehaviour
 
     public void QuitGame()
     {
-        SaveCurrentGame();
-        SaveProgress();
+        if (isSuccessScreen)
+        {
+            saveManager.UpdateOverallHighScores(scoreKeeper.GetScore());
+            saveManager.UpdateLevelProgression((100, 100));
+            saveManager.SetCurrentScore(0);
+            saveManager.SetCurrentLevel((1, 1));
+            saveManager.SaveToJson();
+        }
+        else
+        {
+            SaveCurrentGame();
+            SaveProgress();
+        }
         StartCoroutine(LoadMainMenu());
     }
 

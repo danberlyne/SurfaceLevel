@@ -172,6 +172,7 @@ public class GameManager : MonoBehaviour
             int level = Int32.Parse(nextSceneName[l - 1].ToString());
             saveManager.SetCurrentLevel((stage, level));
             reader.SetCurrentLevel((stage, level));
+            saveManager.UpdateLevelProgression((stage, level));
         }
         saveManager.SaveToJson();
     }

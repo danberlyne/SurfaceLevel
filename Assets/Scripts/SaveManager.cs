@@ -65,6 +65,15 @@ public class SaveManager : MonoBehaviour
         _GameData.currentLevel = level;
     }
 
+    public void UpdateOverallHighScores(int score)
+    {
+        List<int> highScores = reader.GetOverallHighScores();
+        highScores.Add(score);
+        highScores.Sort();
+        highScores.RemoveAt(0);
+        _ScoreData.overallHighScores = highScores;
+    }
+
     public void UpdateLevelProgression((int, int) level)
     {
         if (level.Item1 > _ProgressionData.levelProgression.Item1)
