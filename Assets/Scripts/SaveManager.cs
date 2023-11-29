@@ -5,6 +5,7 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Newtonsoft.Json;
+using System.ComponentModel;
 
 public class SaveManager : MonoBehaviour
 {
@@ -17,10 +18,30 @@ public class SaveManager : MonoBehaviour
     ProgressionData defaultProgressionData = new ProgressionData();
     HighScoreData defaultScoreData = new HighScoreData();
     [SerializeField] int firstLevelBuildIndex = 1;
+    string gameDataJSON, progressionDataJSON, scoreDataJSON;
+    string gameDataPath, progressionDataPath, scoreDataPath;
 
     void Awake()
     {
         reader = GetComponent<JSONReader>();
+        gameDataPath = Application.persistentDataPath + "/CurrentGameData.json";
+        progressionDataPath = Application.persistentDataPath + "/ProgressionData.json";
+        scoreDataPath = Application.persistentDataPath + "/HighScoreData.json";
+        InitialiseData();
+    }
+
+    void InitialiseData()
+    {
+        gameDataJSON = (File.Exists(gameDataPath)) ? File.ReadAllText(gameDataPath) : null;
+        progressionDataJSON = (File.Exists(progressionDataPath)) ? File.ReadAllText(progressionDataPath) : null;
+        scoreDataJSON = (File.Exists(scoreDataPath)) ? File.ReadAllText(scoreDataPath) : null;
+
+        // Allows proper deserialisation of tuples as dictionary keys.
+        TypeDescriptor.AddAttributes(typeof((int, int)), new TypeConverterAttribute(typeof(TupleConverter<int, int>)));
+
+        _GameData = (File.Exists(gameDataPath)) ? JsonConvert.DeserializeObject<CurrentGameData>(gameDataJSON) : GetDefaultGameData();
+        _ProgressionData = (File.Exists(progressionDataPath)) ? JsonConvert.DeserializeObject<ProgressionData>(progressionDataJSON) : GetDefaultProgressionData();
+        _ScoreData = (File.Exists(scoreDataPath)) ? JsonConvert.DeserializeObject<HighScoreData>(scoreDataJSON) : GetDefaultScoreData();
     }
 
     public void SaveToJson()

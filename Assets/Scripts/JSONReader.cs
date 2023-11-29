@@ -67,7 +67,7 @@ public class JSONReader : MonoBehaviour
         return levelProgression; 
     }
     public List<int> GetOverallHighScores() 
-    { 
+    {
         return overallHighScores; 
     }
     public Dictionary<(int, int), (int, string)> GetLevelHighScores() 
